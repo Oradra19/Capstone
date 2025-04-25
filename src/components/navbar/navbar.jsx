@@ -1,10 +1,11 @@
 import React from "react";
-
+import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
+  const location = useLocation();
+
   return (
     <div className="w-full h-[160px] bg-[#9AA6B2] rounded-b-2xl shadow-md px-8 py-6 flex items-center justify-between">
-      
       <img src="/assets/logo.png" alt="logo" className="h-20" />
 
       <div className="flex-1 flex justify-center relative">
@@ -17,12 +18,23 @@ const Navbar = () => {
       </div>
 
       <div className="flex gap-2">
-      <button className="bg-gray-300 px-5 py-2  text-sm rounded-full shadow">
-        <i className="fas fa-user-circle text-gray-500 text-lg"></i>
-        Log in
-      </button>
+        {/* Ganti button dengan Link */}
+        <Link
+          to="/login"
+          state={{ backgroundLocation: location }}
+          className="bg-gray-300 px-5 py-2 text-sm rounded-full shadow flex items-center gap-2"
+        >
+          <i className="fas fa-user-circle text-gray-500 text-lg"></i>
+          Log in
+        </Link>
 
-      <button className="bg-white text-gray-700 px-6 py-3 text-lg flex items-center gap-2 rounded-full shadow">Daftar</button>
+        <Link
+          to="/register"
+          state={{ backgroundLocation: location }}
+          className="bg-white text-gray-700 px-6 py-3 text-lg flex items-center gap-2 rounded-full shadow"
+        >
+          <i className="fas fa-user-plus"></i> Sign Up
+        </Link>
       </div>
     </div>
   );
