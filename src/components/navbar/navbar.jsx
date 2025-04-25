@@ -1,19 +1,28 @@
 import React from "react";
 
+
 const Navbar = () => {
   return (
-    <div className="flex justify-between items-center px-8 py-6 shadow-md bg-[#9AA6B2] rounded-b-2xl">
-      <img src="/public/assets/logo.png" alt="logo" className="h-20" />
-      <div className="flex items-center justify-center gap-6 w-full max-w-3xl mx-auto">
+    <div className="w-full h-[160px] bg-[#9AA6B2] rounded-b-2xl shadow-md px-8 py-6 flex items-center justify-between">
+      
+      <img src="/assets/logo.png" alt="logo" className="h-20" />
+
+      <div className="flex-1 flex justify-center relative">
         <input
           type="text"
-          placeholder="Mau liburan kemana hari ini?" 
-          className="w-full rounded-full border px-4 py-2 shadow"
+          placeholder="Mau liburan kemana hari ini?"
+          className="w-full max-w-lg h-12 text-center rounded-full border border-gray-300 px-10 py-3 shadow bg-white placeholder-gray-500"
         />
+        <i className="fas fa-search text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2 text-lg"></i>
       </div>
-      <div className="flex gap-6">
-        <button className="bg-white text-gray-700 px-4 py-2 rounded-full flex items-center gap-2">Log in</button>
-        <button className="bg-gray-300 px-6 py-3 rounded-full">Daftar</button>
+
+      <div className="flex gap-2">
+      <button className="bg-gray-300 px-5 py-2  text-sm rounded-full shadow">
+        <i className="fas fa-user-circle text-gray-500 text-lg"></i>
+        Log in
+      </button>
+
+      <button className="bg-white text-gray-700 px-6 py-3 text-lg flex items-center gap-2 rounded-full shadow">Daftar</button>
       </div>
     </div>
   );

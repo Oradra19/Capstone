@@ -51,7 +51,7 @@ const dataWisata = [
   
   export default function WisataList() {
     return (
-      <div className="mt-4 px-4 space-y-6 mx-auto max-w-[1500px]">
+      <div className="mt-4 px-4 space-y-6 mx-auto max-w-[1450px]">
         {dataWisata.map((item, idx) => (
           <div key={idx} className="bg-white p-4 shadow-md rounded-xl border-2 border-black flex gap-4">
             <img src={item.image} alt={item.nama} className="w-40 h-28 object-cover rounded-md" />

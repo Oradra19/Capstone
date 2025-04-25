@@ -4,7 +4,7 @@ const BannerPromo = () => {
         <img
           src="/public/assets/disc.png"
           alt="Promo Banner"
-          className="w-[1500px] rounded-2xl shadow-md object-cover h-[190px]"
+          className="w-[1400px] rounded-2xl shadow-md object-cover h-[160px]"
         />
       </div>
     );
