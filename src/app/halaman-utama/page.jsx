@@ -3,10 +3,10 @@ import Kategori from "../../components/kategori";
 import BannerPromo from "../../components/banner";
 import WisataList from "../../components/listwisata";
 
-const HalamanUtama = () => {
+const HalamanUtama = ({user}) => {
     return (
       <div className="min-h-screen bg-[#f8f8f8]">
-        <Navbar />
+        <Navbar user={user} />
         <div className="mt-4">
           <Kategori />
           <BannerPromo />
