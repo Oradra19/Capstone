@@ -58,29 +58,27 @@ const Navbar = () => {
               <i className="fas fa-chevron-down text-xs text-black"></i>
             </button>
 
-
             {dropdownOpen && (
               <div className="absolute right-0 top-[100%] mt-2 w-40 bg-white rounded-xl shadow-lg p-3 z-50 text-sm text-black-700">
-              <Link to="/profile" className="flex items-center gap-4 px-2 py-1 hover:bg-gray-100 rounded font-semibold">
-                <img src="/assets/icons/user-profile.png" alt="Profil" className="w-4 h-4" />
-                Profil
-              </Link>
-              <Link to="/favorite" className="flex items-center gap-2 px-2 py-1 hover:bg-gray-100 rounded font-semibold">
-                <img src="/assets/icons/user-fav.png" alt="Favorite" className="w-6 h-6" />
-                Favorite
-              </Link>
-              <Link to="/plan" className="flex items-center gap-2 px-2 py-1 hover:bg-gray-100 rounded font-semibold">
-                <img src="/assets/icons/user-plan.png" alt="Plan" className="w-6 h-6" />
-                Plan
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap- w-full text-left px-10 py-1 hover:bg-red-100 text-red-600 rounded mt-2 font-semibold text-lg"
-              >
-                Logout
-              </button>
-            </div>
-            
+                <Link to="/profile" className="flex items-center gap-4 px-2 py-1 hover:bg-gray-100 rounded font-semibold">
+                  <img src="/assets/icons/user-profile.png" alt="Profil" className="w-4 h-4" />
+                  Profil
+                </Link>
+                <Link to="/favorite" className="flex items-center gap-2 px-2 py-1 hover:bg-gray-100 rounded font-semibold">
+                  <img src="/assets/icons/user-fav.png" alt="Favorite" className="w-6 h-6" />
+                  Favorite
+                </Link>
+                <Link to="/plan" className="flex items-center gap-2 px-2 py-1 hover:bg-gray-100 rounded font-semibold">
+                  <img src="/assets/icons/user-plan.png" alt="Plan" className="w-6 h-6" />
+                  Plan
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap- w-full text-left px-10 py-1 hover:bg-red-100 text-red-600 rounded mt-2 font-semibold text-lg"
+                >
+                  Logout
+                </button>
+              </div>
             )}
           </>
         )}
