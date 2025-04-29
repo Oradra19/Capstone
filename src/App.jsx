@@ -5,7 +5,7 @@ import Login from './app/halaman-login/page';
 import Register from './app/halaman-register/page';
 import UtamaLogin from './app/halaman-utama-login/page';
 import UtamaProfil from './app/halaman-utama-profil/page';
-import DetailWisata from './app/detail-wisata/page';
+import PageDetailWisata from "./app/detail-wisata/page.jsx";
 
 function AppRoutes({ user, setUser }) {
   const location = useLocation();
@@ -19,7 +19,7 @@ function AppRoutes({ user, setUser }) {
         <Route path="/register" element={<Register />} />
         <Route path="/utamalogin" element={<UtamaLogin />} />
         <Route path="/utamaprofil" element={<UtamaProfil />} />
-        <Route path="/detail" element={<DetailWisata />} />
+        <Route path="/detail/:id" element={<PageDetailWisata />} />
       </Routes>
 
       {backgroundLocation && (

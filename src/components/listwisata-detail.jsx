@@ -1,0 +1,86 @@
+export const dataWisata = [
+  {
+    id: 0,
+    nama: "Tumurun Private Museum",
+    lokasi: "Solo, Jawa Tengah",
+    deskripsi: "Tumurun Private Museum memang masih tergolong baru. Namun cukup populer bagi warga sekitar. bagaimana tidak, banyak spot foto unik yang cocok untuk didatangi oleh kaula muda.Perlu diperhatikan, tempat hits di Kota Solo ini bersifat private dan wajib reservasi sebelum masuk.",
+    image: "/assets/detailwisata/tumurun.png",
+    harga: 25000,
+    rating: 4.8,
+    longitude: -7.57026823325761,
+    latitude: 110.8164383754869,
+  },
+
+  {
+    id: 1,
+    nama: "Air Terjun grojogan sewu",
+    lokasi: "Karanganyar, Jawa Tengah",
+    deskripsi: "Salah satu tempat wisata paling hits di Karanganyar adalah Grojogan Sewu Tawangmangu. Air terjun dengan tinggi 80 meter ini berlokasi di sisi barat Gunung Lawu, atau sekitar 37 kilometer dari pusat Kota Solo. Air terjun inin merupakan air terjun tertinggi di wilayah Jawa Tengah.",
+    image: "/assets/detailwisata/grojogan.png",
+    harga: 25000,
+    rating: 4.8,
+    longitude: 110.8164383754869,
+    latitude: -7.57026823325761,
+  },
+
+  {
+    id: 2,
+    nama: "Museum Manusia Purba Sangiran",
+    lokasi: "Sragen, Jawa Tengah",
+    deskripsi: "Salah satu wisata edukasi yang berada di Kabupaten Sragen tepatnya di Kecamatan Kalijambe. Objek wisata edukasi ini tidak jauh dari situs fosil purbakala Sangiran, yang sudah ditetapkan oleh UNESCO sebagai salah satu warisan dunia.",
+    image: "/assets/detailwisata/museum.png",
+    harga: 5000,
+    rating: 4.8,
+    longitude: 110.8164383754869,
+    latitude: -7.57026823325761,
+  },
+
+  {
+    id: 3,
+    nama: "Pantai Nampu",
+    lokasi: "Wonogiri, Jawa Tengah",
+    deskripsi: "Pantai yang terletak di ujung Kabupaten Wonogiri ini merupakan salah satu dari beberapa pantai yang masih berada di Eks Karesidenan Surakarta. Keindahan Pantai Nampu memang tidak bisa dianggap biasa saja terbukti dengan ramainya pantai ini pada akhir pekan.",
+    image: "/assets/detailwisata/nampu.png",
+    harga: 5000,
+    rating: 4.8,
+    longitude: 110.8164383754869,
+    latitude: -7.57026823325761,
+  },
+
+  {
+    id: 4,
+    nama: "Embung Manajar",
+    lokasi: "Boyolali, Jawa Tengah",
+    deskripsi: "Wisata Embung Manajar Selo Boyolali terletak di atas ketinggian 1.700 meter di atas permukaan laut (mdpl), serta memiliki luas sekitar 1.602 meter persegi. Latar Gunung Merbabu yang instagramable, dan Gunung Merapi yang legendaris. Selain itu, pengunjung juga bisa melakukan camping.",
+    image: "/assets/detailwisata/embung.png",
+    harga: 5000,
+    rating: 4.8,
+    longitude: 110.8164383754869,
+    latitude: -7.57026823325761,
+  },
+
+  {
+    id: 5,
+    nama: "Candi Prambanan",
+    lokasi: "Yogyakarta",
+    deskripsi: "Candi Prambanan merupakan kompleks candi bercorak Hindu terbesar di dunia yang sudah ditetapkan sebagai Warisan Budaya Dunia (world heritage) oleh UNESCO. Sebagian kawasan Candi Prambanan masuk wilayah Klaten, sementara lainnya masuk daerah Sleman, Yogyakarta.",
+    image: "/assets/detailwisata/candi.png",
+    harga: 5000,
+    rating: 4.8,
+    longitude: 110.8164383754869,
+    latitude: -7.57026823325761,
+  },
+
+  {
+    id: 6,
+    nama: "Gunung Sepikul",
+    lokasi: "Yogyakarta",
+    deskripsi: "Gunung Sepikul adalah salah-satu gunung yang ada di Sukoharjo yang cocok dijadikan tujuan pendakian untuk para pemula. Gunung Sepikul memiliki ketinggian sekitar 350 mdpl, dengan sudut kemiringan 40 – 60 derajat. Gunung Sepikul adalah dua gunung batu yang saling berhadapan.",
+    image: "/assets/detailwisata/sepikul.png",
+    harga: 5000,
+    rating: 4.8,
+    longitude: 110.8164383754869,
+    latitude: -7.57026823325761,
+  },
+
+];

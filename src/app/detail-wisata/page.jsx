@@ -1,5 +1,26 @@
-function detail() {
-    return <h1>Ini Halaman Detail Wisata</h1>;
-  }
-  export default detail;
-  
+// src/app/detail-wisata/page.jsx
+import { useParams } from "react-router-dom";
+import { dataWisata } from "../../components/listwisata-detail";
+import DetailWisata from "../../components/detailwisata";
+
+export default function PageDetailWisata() {
+  const { id } = useParams();
+  const wisataId = parseInt(id); // penting!
+
+  const wisata = dataWisata.find(w => w.id === wisataId);
+  if (!wisata) return <p>Wisata tidak ditemukan</p>;
+
+  const mapsEmbedUrl = `https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${wisata.latitude},${wisata.longitude}`;
+
+  return (
+    <DetailWisata
+      nama={wisata.nama}
+      lokasi={wisata.lokasi}
+      deskripsi={wisata.deskripsi}
+      gambar={wisata.image}
+      harga={wisata.harga}
+      rating={wisata.rating}
+      mapsEmbedUrl={mapsEmbedUrl}
+    />
+  );
+}

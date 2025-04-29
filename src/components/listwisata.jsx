@@ -1,4 +1,4 @@
-const dataWisata = [
+export const dataWisata = [
     {
       nama: "Tumurun Private Museum",
       deskripsi:
@@ -49,21 +49,34 @@ const dataWisata = [
     },
   ];
   
+  import { useNavigate } from "react-router-dom";
+
   export default function WisataList() {
+    const navigate = useNavigate();
+  
+    const handleClick = (idx) => {
+      navigate(`/detail/${idx}`);
+    };
+  
     return (
       <div className="mt-4 px-4 space-y-6 mx-auto max-w-[1450px]">
         {dataWisata.map((item, idx) => (
-          <div key={idx} className="bg-white p-4 shadow-md rounded-xl border-2 border-black flex gap-4">
+          <div
+            key={idx}
+            onClick={() => handleClick(idx)}
+            className="cursor-pointer bg-white p-4 shadow-md rounded-xl border-2 border-black flex gap-4 hover:bg-gray-100 transition"
+          >
             <img src={item.image} alt={item.nama} className="w-40 h-28 object-cover rounded-md" />
             <div>
               <h2 className="text-xl font-bold">{item.nama}</h2>
-              <p className="text-sm text-gray-700">{item.deskripsi}</p>
+              <p className="text-sm text-gray-700 line-clamp-3">{item.deskripsi}</p>
             </div>
           </div>
         ))}
       </div>
     );
   }
+  
   
   
   
