@@ -1,8 +1,9 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleClose = () => {
     navigate(-1);
@@ -11,7 +12,6 @@ const Register = () => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl p-8 w-[400px] shadow-xl relative">
-        {/* Tombol Close */}
         <button
           onClick={handleClose}
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl"
@@ -19,14 +19,17 @@ const Register = () => {
           &times;
         </button>
 
-        <h2 className="text-center text-lg font-semibold mb-1">
+        <h2 className="text-center text-lg font-semibold mb-4">
           Creat An Account{" "}</h2>
 
         <h3 className="text-center text-xs mb-4">
          Already have an account?{" "}
-         <a href="#" className="text-blue-600 underline">
-           Login
-         </a>
+         <button
+            onClick={() => navigate("/login", { state: { backgroundLocation: location } })}
+            className="text-blue-600 underline"
+          >
+            Login
+          </button>
         </h3>
 
       
