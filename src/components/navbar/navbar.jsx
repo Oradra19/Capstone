@@ -72,7 +72,7 @@ const Navbar = () => {
 
             {dropdownOpen && (
               <div className="absolute right-0 top-[100%] mt-2 w-40 bg-white rounded-xl shadow-lg p-3 z-50 text-sm text-black-700">
-                <Link to="/profile" className="flex items-center gap-4 px-2 py-1 hover:bg-gray-100 rounded font-semibold">
+                <Link to="/profil" className="flex items-center gap-4 px-2 py-1 hover:bg-gray-100 rounded font-semibold">
                   <img src="/assets/icons/user-profile.png" alt="Profil" className="w-4 h-4" />
                   Profil
                 </Link>

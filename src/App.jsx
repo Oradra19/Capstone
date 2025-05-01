@@ -8,7 +8,7 @@ import UtamaProfil from './app/halaman-utama-profil/page';
 import PageDetailWisata from "./app/detail-wisata/page.jsx";
 import Favorite from "./app/halaman-favorit/page";
 import ForgotPassword from './app/halaman-forgot-password/page';
-
+import Profile from "./app/halaman-profil/page.jsx";
 
 function AppRoutes({ user, setUser }) {
   const location = useLocation();
@@ -25,12 +25,12 @@ function AppRoutes({ user, setUser }) {
         <Route path="/utamaprofil" element={<UtamaProfil />} />
         <Route path="/detail/:id" element={<PageDetailWisata />} />
         <Route path="/favorite" element={<Favorite />} />
+        <Route path="/profil" element={<Profile />} />
 
       </Routes>
 
       {backgroundLocation && (
         <Routes>
-          {/* Modal routes for login and register */}
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
