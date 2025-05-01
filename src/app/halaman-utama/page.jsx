@@ -15,7 +15,6 @@ const HalamanUtama = ({user}) => {
         <footer className="bg-gray-800 py-4 mt-8">
             <p className="text-center text-lg text-blue-600 mt-8 mb-4">Welcome to our website!</p>
             <p className="text-center text-sm text-white">copyright @timcapstone</p>
-          
         </footer>
       </div>
     );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
@@ -6,9 +6,21 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  // Memuat status login dari localStorage saat komponen dimuat
+  useEffect(() => {
+    const loggedInStatus = localStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(loggedInStatus);
+  }, []);
+
   const handleLogout = () => {
     setIsLoggedIn(false);
+    localStorage.setItem("isLoggedIn", "false"); // Set status login menjadi false di localStorage
     setDropdownOpen(false);
+  };
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    localStorage.setItem("isLoggedIn", "true"); // Set status login menjadi true di localStorage
   };
 
   return (
@@ -31,7 +43,7 @@ const Navbar = () => {
               to="/login"
               state={{ backgroundLocation: location }}
               className="bg-white text-black-700 px-5 py-2 text-sm flex items-center gap-2 rounded-full shadow"
-              onClick={() => setIsLoggedIn(true)} // simulasi login
+              onClick={handleLogin} // Simulasi login dan set status
             >
               <i className="fas fa-user-circle text-black-500 text-lg"></i>
               <span className="font-semibold">Log in</span>
