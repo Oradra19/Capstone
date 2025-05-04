@@ -9,6 +9,9 @@ import PageDetailWisata from "./app/detail-wisata/page.jsx";
 import Favorite from "./app/halaman-favorit/page";
 import ForgotPassword from './app/halaman-forgot-password/page';
 import Profile from "./app/halaman-profil/page.jsx";
+import Plan from "./app/halaman-plan/page.jsx";
+import PlanDetail from "./app/plan-detail/page.jsx";
+
 
 function AppRoutes({ user, setUser }) {
   const location = useLocation();
@@ -26,6 +29,8 @@ function AppRoutes({ user, setUser }) {
         <Route path="/detail/:id" element={<PageDetailWisata />} />
         <Route path="/favorite" element={<Favorite />} />
         <Route path="/profil" element={<Profile />} />
+        <Route path="/plan" element={<Plan />} />
+        <Route path="/plan/:id" element={<PlanDetail />} />
 
       </Routes>
 
