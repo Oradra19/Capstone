@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
+import ProfileDropdown from "../../components/navbar/profiledropdown";
 
 const dataPlans = [
   {
@@ -61,25 +62,13 @@ const DetailPlan = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F9FAFC] font-montserrat">
-      <div className="flex justify-between items-center p-6">
-        <img
-          src="/assets/logo2.png"
-          alt="Logo"
-          className="h-20 drop-shadow-lg"
-        />
-        <div className="flex items-center gap-2 text-black font-semibold text-sm">
-          <img
-            src="/assets/icons/user-profile.png"
-            alt="User"
-            className="w-6 h-6 rounded"
-          />
-          <span className="font-bold">KENZABAR</span>
-          <i className="fas fa-chevron-down text-xs text-black"></i>
-        </div>
-      </div>
+    <ProfileDropdown />
 
-      <div className="flex-grow p-6">
-        <div className="bg-[#E9E9E9] p-6 rounded-xl shadow-md max-w-[1500px] mx-auto w-full">
+      <div className="flex-grow p-8">
+      <h1 className="text-3xl md:text-4xl font-bold text-center mt-4 mb-4 tracking-wide">
+        Detail Plan
+        </h1>
+        <div className="bg-[#E9E9E9] p-6 rounded-xl shadow-md max-w-[1500px] mx-auto w-full mt-2">
           <h2 className="italic text-xl font-semibold mb-6">Plan {plan.id}</h2>
 
           {plan.destinasi.map((dest, index) => (

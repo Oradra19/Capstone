@@ -1,4 +1,3 @@
-// src/app/detail-wisata/page.jsx
 import { useParams } from "react-router-dom";
 import { dataWisata } from "../../components/listwisata-detail";
 import DetailWisata from "../../components/detailwisata";
