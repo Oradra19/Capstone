@@ -11,6 +11,7 @@ import ForgotPassword from './app/halaman-forgot-password/page';
 import Profile from "./app/halaman-profil/page.jsx";
 import Plan from "./app/halaman-plan/page.jsx";
 import PlanDetail from "./app/plan-detail/page.jsx";
+import BuatPlan from "./app/buat-plan/page.jsx";
 
 
 function AppRoutes({ user, setUser }) {
@@ -31,6 +32,7 @@ function AppRoutes({ user, setUser }) {
         <Route path="/profil" element={<Profile />} />
         <Route path="/plan" element={<Plan />} />
         <Route path="/plan/:id" element={<PlanDetail />} />
+        <Route path="/buat-plan" element={<BuatPlan />} />
 
       </Routes>
 

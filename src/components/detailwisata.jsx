@@ -1,20 +1,25 @@
+import { useNavigate } from "react-router-dom";
+
 export default function DetailWisata({ nama, lokasi, deskripsi, gambar, harga, rating, mapsEmbedUrl }) {
+  const navigate = useNavigate();
 
   function tambahKeLocalStorage(key, destinasi) {
     const existing = JSON.parse(localStorage.getItem(key)) || [];
   
-    // Cek apakah sudah ada berdasarkan nama
+
     const sudahAda = existing.some(item => item.nama === destinasi.nama);
+
   
     if (!sudahAda) {
       existing.push(destinasi);
       localStorage.setItem(key, JSON.stringify(existing));
-      alert(`Ditambahkan ke ${key === "rencana" ? "Plan" : "Favorit"}!`);
+      if (key === "rencana") {
+        navigate("/buat-plan"); 
+      }
     } else {
       alert(`${destinasi.nama} sudah ada di ${key === "rencana" ? "Plan" : "Favorit"}.`);
     }
-  }
-  
+}
 
 
   return (
@@ -38,7 +43,7 @@ export default function DetailWisata({ nama, lokasi, deskripsi, gambar, harga, r
           <div className="flex gap-4 flex-wrap">
             <button
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-              onClick={() =>
+              onClick={() => {
                 tambahKeLocalStorage("rencana", {
                   nama,
                   lokasi,
@@ -47,9 +52,9 @@ export default function DetailWisata({ nama, lokasi, deskripsi, gambar, harga, r
                   harga,
                   rating,
                   mapsEmbedUrl,
-                })
-              }
-              
+                });
+                navigate("/buat-plan");
+              }}
             >
               Tambah ke Plan
             </button>

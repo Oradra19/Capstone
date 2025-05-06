@@ -93,7 +93,6 @@ const DetailPlan = () => {
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="bg-gray-800 py-4">
         <p className="text-center text-lg text-blue-600">
           Welcome to our website!
