@@ -22,25 +22,67 @@ const BuatPlan = () => {
   const [planId, setPlanId] = useState(1);
   const [plans, setPlans] = useState([]);
 
+  
+
   const handleCreatePlan = () => {
     if (!planName || !planDate || selectedWisata.length === 0) {
       alert("Lengkapi semua data terlebih dahulu!");
       return;
     }
-
+  
+    const savedPlans = JSON.parse(localStorage.getItem("customPlans")) || [];
+  
+    const isDuplicate = savedPlans.some(
+      (plan) => plan.name === planName && plan.date === planDate
+    );
+    if (isDuplicate) {
+      alert("Plan dengan nama dan tanggal yang sama sudah ada!");
+      return;
+    }
+  
+    // Ambil total jumlah plan dari localStorage + state lokal
+    const totalPlans = savedPlans.length + plans.length;
+  
     const newPlan = {
-      planId: `Plan ${planId}`,
+      planId: `Plan ${totalPlans + 1}`, // ← penomoran plan yang benar
       name: planName,
       date: planDate,
       destinations: selectedWisata,
     };
-
-    setPlans([...plans, newPlan]);
-    setPlanId(planId + 1);
+  
+    const updatedPlans = [...plans, newPlan]; // hanya update state lokal dulu
+  
+    setPlans(updatedPlans); // update state
     setPlanName("");
     setPlanDate("");
     setSelectedWisata([]);
   };
+  
+  
+  
+  const handleSavePlans = () => {
+    if (plans.length === 0) {
+      alert("Tidak ada plan untuk disimpan!");
+      return;
+    }
+  
+    const existingPlans = JSON.parse(localStorage.getItem("customPlans")) || [];
+    const updatedPlans = [...existingPlans, ...plans];
+  
+    localStorage.setItem("customPlans", JSON.stringify(updatedPlans));
+    alert("Rencana berhasil disimpan ke halaman Plan!");
+    setPlans([]);
+  };
+  
+  const formatDate = (isoDate) => {
+    const dateObj = new Date(isoDate);
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0'); // bulan dimulai dari 0
+    const year = dateObj.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+  
+  
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F9FAFC] font-montserrat">
@@ -104,89 +146,102 @@ const BuatPlan = () => {
           </Paper>
         </Container>
 
-        {/* Rencana yang Dibuat */}
         <Container maxWidth="md">
-  <Typography variant="h5" fontWeight="bold" gutterBottom>
-    Rencana yang Telah Dibuat
-  </Typography>
-  {plans.length === 0 ? (
-    <Typography variant="body1" color="text.secondary">
-      Belum ada rencana dibuat.
-    </Typography>
-  ) : (
-    plans.map((plan, index) => (
-      <Card
-        key={index}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          marginBottom: 4,
-          padding: 2,
-          backgroundColor: "#ffffff",
-          borderRadius: 3,
-          boxShadow: 3,
-        }}
-      >
-        <CardContent>
-  <Typography variant="h6" color="primary">
-    {plan.planId}: {plan.name}
-  </Typography>
-  <Typography variant="body1" sx={{ mb: 2 }}>
-    Tanggal: {plan.date}
-  </Typography>
-
-  <Grid container spacing={2}>
-    {plan.destinations.map((w, idx) => (
-      <Grid item xs={12} sm={6} md={4} key={idx}>
-        <Box
-          sx={{
-            border: "1px solid #ccc",
-            borderRadius: 2,
-            overflow: "hidden",
-            boxShadow: 1,
-            transition: "transform 0.2s",
-            "&:hover": {
-              transform: "scale(1.02)",
-            },
-          }}
-        >
-          <Box
-            sx={{
-              width: "100%",
-              height: 160,
-              overflow: "hidden",
-            }}
-          >
-            <img
-              src={w.image}
-              alt={w.nama}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                display: "block",
-              }}
-            />
-          </Box>
-          <Box sx={{ p: 1 }}>
-            <Typography variant="subtitle1" fontWeight="bold">
-              {w.nama}
+          <Typography variant="h5" fontWeight="bold" gutterBottom>
+            Rencana yang Telah Dibuat
+          </Typography>
+          {plans.length === 0 ? (
+            <Typography variant="body1" color="text.secondary">
+              Belum ada rencana dibuat.
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {w.lokasi}
-            </Typography>
-          </Box>
-        </Box>
-      </Grid>
-    ))}
-  </Grid>
-</CardContent>
+          ) : (
+            plans.map((plan, index) => (
+              <Card
+                key={index}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 2,
+                  marginBottom: 4,
+                  padding: 2,
+                  backgroundColor: "#ffffff",
+                  borderRadius: 3,
+                  boxShadow: 3,
+                }}
+              >
+                <CardContent>
+                  <Typography variant="h6" color="primary">
+                    {plan.planId}: {plan.name}
+                  </Typography>
+                  <Typography variant="body1" sx={{ mb: 2 }}>
+                    Tanggal: {formatDate(plan.date)}
+                  </Typography>
 
-      </Card>
-    ))
-  )}
-</Container>
+
+                  <Grid container spacing={2}>
+                    {plan.destinations.map((w, idx) => (
+                      <Grid item xs={12} sm={6} md={4} key={idx}>
+                        <Box
+                          sx={{
+                            border: "1px solid #ccc",
+                            borderRadius: 2,
+                            overflow: "hidden",
+                            boxShadow: 1,
+                            transition: "transform 0.2s",
+                            "&:hover": {
+                              transform: "scale(1.02)",
+                            },
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              width: "100%",
+                              height: 160,
+                              overflow: "hidden",
+                            }}
+                          >
+                            <img
+                              src={w.image}
+                              alt={w.nama}
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                                display: "block",
+                              }}
+                            />
+                          </Box>
+                          <Box sx={{ p: 1 }}>
+                            <Typography variant="subtitle1" fontWeight="bold">
+                              {w.nama}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {w.lokasi}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </CardContent>
+              </Card>
+            ))
+          )}
+        </Container>
+
+
+{plans.length > 0 && (
+  <Box sx={{ textAlign: "center", mb: 4 }}>
+    <Button
+      variant="contained"
+      color="success"
+      onClick={handleSavePlans}
+    >
+      Simpan Plan
+    </Button>
+  </Box>
+)}
+
 
       </div>
 
