@@ -29,7 +29,7 @@ const Navbar = () => {
     e.preventDefault();
     if (searchKeyword.trim() !== "") {
       navigate(`/search?query=${encodeURIComponent(searchKeyword)}`);
-      setSearchKeyword(""); // kosongkan input setelah navigasi
+      setSearchKeyword(""); 
     }
   };
 

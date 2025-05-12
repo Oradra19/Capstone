@@ -13,6 +13,7 @@ import Plan from "./app/halaman-plan/page.jsx";
 import PlanDetail from "./app/plan-detail/page.jsx";
 import BuatPlan from "./app/buat-plan/page.jsx";
 import HasilSearch from "./app/halaman-search/page.jsx";  
+import KategoriTempat from "./app/kategori-tempat/page.jsx";
 
 
 function AppRoutes({ user, setUser }) {
@@ -35,6 +36,7 @@ function AppRoutes({ user, setUser }) {
         <Route path="/plan/:id" element={<PlanDetail />} />
         <Route path="/buat-plan" element={<BuatPlan />} />
         <Route path="/search" element={<HasilSearch />} />
+        <Route path="/kategori/:nama" element={<KategoriTempat />} />
         
 
       </Routes>
