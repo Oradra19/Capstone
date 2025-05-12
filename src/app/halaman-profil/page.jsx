@@ -2,6 +2,11 @@ import React, { useState } from "react";
 
 const Profile = () => {
   const [showModal, setShowModal] = useState(false);
+  const [showImageOptions, setShowImageOptions] = useState(false);
+  const [profileImage, setProfileImage] = useState(
+    "/assets/icons/user-profil2.png"
+  );
+
   const [profile, setProfile] = useState({
     namaTampilan: "Kenzabar",
     email: "kenzabarberkahbarokahselalujosjis@gmail.com",
@@ -14,7 +19,7 @@ const Profile = () => {
   const [formData, setFormData] = useState(profile);
 
   const openModal = () => {
-    setFormData(profile); // isi form dengan data yang ada
+    setFormData(profile);
     setShowModal(true);
   };
 
@@ -28,62 +33,116 @@ const Profile = () => {
     alert("Profil berhasil disimpan!");
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setProfileImage(imageUrl);
+    }
+  };
+
+  const handleDeleteImage = () => {
+    setProfileImage("/assets/icons/user-profil2.png"); // reset ke default avatar
+    setShowImageOptions(false); // tutup menu popup setelah hapus
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-[#F9FAFC] font-sans">
       <div className="flex justify-between items-center p-6">
-        <img src="/assets/logo2.png" alt="Logo" className="h-20 drop-shadow-lg" />
+        <img
+          src="/assets/logo2.png"
+          alt="Logo"
+          className="h-20 drop-shadow-lg"
+        />
       </div>
-
 
       <div className="flex-grow">
-  <div className="max-w-xl mx-auto bg-white rounded-xl shadow-xl p-6 mt-6 transition-all hover:shadow-2xl">
-    <div className="flex flex-col items-center gap-6">
-      <div className="relative">
-        <img 
-          src="/assets/icons/user-profil2.png" 
-          alt="User" 
-          className="w-28 h-28 rounded-full border-4 shadow-lg transition-all transform hover:scale-110" 
-        />
-        <div className="absolute bottom-0 right-0 bg-[#d3dd60] p-1 rounded-full">
-          <img src="/assets/icons/edit.png" alt="edit" className="w-5 h-5 text-white" />
+        <div className="max-w-xl mx-auto bg-white rounded-xl shadow-xl p-6 mt-6 transition-all hover:shadow-2xl">
+          <div className="flex flex-col items-center gap-6">
+            <div className="relative">
+              <img
+                src={profileImage}
+                alt="User"
+                className="w-28 h-28 rounded-full border-4 shadow-lg transition-all transform hover:scale-110"
+              />
+              <button
+                type="button"
+                onClick={() => setShowImageOptions(!showImageOptions)}
+                className="absolute bottom-0 right-0 bg-[#d3dd60] p-1 rounded-full"
+              >
+                <img
+                  src="/assets/icons/edit.png"
+                  alt="edit"
+                  className="w-5 h-5 text-white"
+                />
+              </button>
+
+              {showImageOptions && (
+                <div className="absolute top-full right-0 mt-2 bg-white border shadow rounded w-40 z-10">
+                  <label className="block px-4 py-2 cursor-pointer hover:bg-gray-100">
+                    Ganti Foto
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
+                  </label>
+                  <button
+                    onClick={handleDeleteImage}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                  >
+                    Hapus Foto
+                  </button>
+                </div>
+              )}
+            </div>
+            <h2 className="text-3xl font-semibold text-gray-800">
+              {profile.namaTampilan}
+            </h2>
+            <p className="text-gray-500 italic">{profile.email}</p>
+          </div>
+
+          <div className="mt-6 w-full space-y-4 text-sm text-gray-800">
+            <div className="flex justify-between">
+              <span className="font-semibold w-40 inline-block">
+                Nama Lengkap:
+              </span>
+              <span>{profile.namaLengkap}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-semibold w-40 inline-block">
+                Tanggal Lahir:
+              </span>
+              <span>{profile.tanggalLahir}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-semibold w-40 inline-block">
+                Jenis Kelamin:
+              </span>
+              <span>{profile.jenisKelamin}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-semibold w-40 inline-block">Alamat:</span>
+              <span>{profile.alamat}</span>
+            </div>
+          </div>
+
+          <div className="mt-6 flex justify-end">
+            <button
+              onClick={openModal}
+              className="font-bold text-black px-4 py-2 rounded-full hover:bg-[#d3dd60] transition-all flex gap-2"
+            >
+              <img
+                src="/assets/icons/edit.png"
+                alt="edit"
+                className="w-6 h-6"
+              />
+              Edit
+            </button>
+          </div>
         </div>
       </div>
-      <h2 className="text-3xl font-semibold text-gray-800">{profile.namaTampilan}</h2>
-      <p className="text-gray-500 italic">{profile.email}</p>
-    </div>
-
-    <div className="mt-6 w-full space-y-4 text-sm text-gray-800">
-      <div className="flex justify-between">
-        <span className="font-semibold w-40 inline-block">Nama Lengkap:</span> 
-        <span>{profile.namaLengkap}</span>
-      </div>
-      <div className="flex justify-between">
-        <span className="font-semibold w-40 inline-block">Tanggal Lahir:</span> 
-        <span>{profile.tanggalLahir}</span>
-      </div>
-      <div className="flex justify-between">
-        <span className="font-semibold w-40 inline-block">Jenis Kelamin:</span> 
-        <span>{profile.jenisKelamin}</span>
-      </div>
-      <div className="flex justify-between">
-        <span className="font-semibold w-40 inline-block">Alamat:</span> 
-        <span>{profile.alamat}</span>
-      </div>
-    </div>
-
-    <div className="mt-6 flex justify-end">
-      <button 
-        onClick={openModal} 
-        className="font-bold text-black px-4 py-2 rounded-full  hover:bg-[#d3dd60] transition-all flex gap-2"
-      >
-        <img src="/assets/icons/edit.png" alt="edit" className="w-6 h-6" />
-        Edit
-      </button>
-    </div>
-  </div>
-</div>
-
-
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
@@ -130,9 +189,10 @@ const Profile = () => {
         </div>
       )}
 
-      {/* Footer */}
       <footer className="bg-gray-800 py-4 mt-8">
-        <p className="text-center text-lg text-blue-600">Welcome to our website!</p>
+        <p className="text-center text-lg text-blue-600">
+          Welcome to our website!
+        </p>
         <p className="text-center text-sm text-white">copyright @timcapstone</p>
       </footer>
     </div>

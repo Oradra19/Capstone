@@ -98,6 +98,7 @@ export const dataWisata = [
       navigate(`/detail/${idx}`);
     };
   
+  
     return (
       <div className="mt-4 px-4 space-y-6 mx-auto max-w-[1450px]">
         {dataWisata.map((item, idx) => (
@@ -118,6 +119,7 @@ export const dataWisata = [
       </div>
     );
   }
+  
   
   
   

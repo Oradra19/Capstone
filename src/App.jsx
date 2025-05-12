@@ -12,6 +12,7 @@ import Profile from "./app/halaman-profil/page.jsx";
 import Plan from "./app/halaman-plan/page.jsx";
 import PlanDetail from "./app/plan-detail/page.jsx";
 import BuatPlan from "./app/buat-plan/page.jsx";
+import HasilSearch from "./app/halaman-search/page.jsx";  
 
 
 function AppRoutes({ user, setUser }) {
@@ -23,7 +24,7 @@ function AppRoutes({ user, setUser }) {
     <>
       <Routes location={backgroundLocation || location}>
         <Route path="/" element={<Home user={user} />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<Register />} /> 
         <Route path="/utamalogin" element={<UtamaLogin />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/utamaprofil" element={<UtamaProfil />} />
@@ -33,6 +34,8 @@ function AppRoutes({ user, setUser }) {
         <Route path="/plan" element={<Plan />} />
         <Route path="/plan/:id" element={<PlanDetail />} />
         <Route path="/buat-plan" element={<BuatPlan />} />
+        <Route path="/search" element={<HasilSearch />} />
+        
 
       </Routes>
 
