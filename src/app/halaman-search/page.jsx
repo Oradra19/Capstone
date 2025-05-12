@@ -1,6 +1,6 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
-import { dataWisata } from "../../components/listwisata";
+import { Link, useLocation } from "react-router-dom";
+import { dataWisata } from "../../components/listwisata-detail";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -20,21 +20,20 @@ const SearchResults = () => {
       {filteredResults.length > 0 ? (
         <div className="space-y-4">
           {filteredResults.map((item, idx) => (
-            <div
-              key={idx}
-              className="cursor-pointer bg-white p-4 shadow-md rounded-xl border border-gray-300 flex gap-4"
-            >
-              <img
-                src={item.image}
-                alt={item.nama}
-                className="w-32 h-24 object-cover rounded"
-              />
-              <div>
-                <h3 className="text-xl font-semibold">{item.nama}</h3>
-                <p className="text-gray-700 text-sm line-clamp-3">{item.deskripsi}</p>
-                <p className="text-green-600 font-medium mt-2">{item.harga}</p>
+            <Link to={`/detail-wisata/${item.id}`} key={item.id} className="block">
+              <div className="cursor-pointer bg-white p-4 shadow-md rounded-xl border border-black-300 flex gap-4 hover:bg-gray-50 transition">
+                <img
+                  src={item.image}
+                  alt={item.nama}
+                  className="w-32 h-24 object-cover rounded"
+                />
+                <div>
+                  <h3 className="text-xl font-bold">{item.nama}</h3>
+                  <p className="text-gray-700 text-sm line-clamp-3">{item.deskripsi}</p>
+                  <p className="text-green-600 font-medium mt-2">{item.harga}</p>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       ) : (
