@@ -1,23 +1,23 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-
 const Login = () => {
+  const location = useLocation();
   const navigate = useNavigate();
-  const location = useLocation(); 
 
-  const handleClose = () => {
-    navigate(-1); 
-  };
+  const backgroundLocation = location.state?.backgroundLocation || location;
 
   const handleSignUp = () => {
-    navigate("/register", { state: { backgroundLocation: location } });
+    navigate("/register", { state: { backgroundLocation } });
+  };
+
+  const handleClose = () => {
+    navigate(-1);
   };
 
   const handleForgotPassword = () => {
-    navigate("/forgot-password", { state: { backgroundLocation: location } });
+    navigate("/forgot-password", { state: { backgroundLocation } });
   };
-  
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -61,7 +61,10 @@ const Login = () => {
           </button>
 
           <div className="text-center">
-          <button onClick={handleForgotPassword} className="text-blue-600 underline text-sm">
+            <button
+              onClick={handleForgotPassword}
+              className="text-blue-600 underline text-sm"
+            >
               Forgot Password
             </button>
           </div>
@@ -96,7 +99,6 @@ const Login = () => {
             />
           </a>
         </div>
-
       </div>
     </div>
   );

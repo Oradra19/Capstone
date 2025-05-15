@@ -2,11 +2,17 @@ import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const Register = () => {
-  const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const backgroundLocation = location.state?.backgroundLocation || location;
 
   const handleClose = () => {
     navigate(-1);
+  };
+
+  const handleLogin = () => {
+    navigate("/login", { state: { backgroundLocation } });
   };
 
   return (
@@ -20,19 +26,16 @@ const Register = () => {
         </button>
 
         <h2 className="text-center text-lg font-semibold mb-4">
-          Creat An Account{" "}</h2>
+          Creat An Account{" "}
+        </h2>
 
         <h3 className="text-center text-xs mb-4">
-         Already have an account?{" "}
-         <button
-            onClick={() => navigate("/login", { state: { backgroundLocation: location } })}
-            className="text-blue-600 underline"
-          >
+          Already have an account?{" "}
+          <button onClick={handleLogin} className="text-blue-600 underline">
             Login
           </button>
         </h3>
 
-      
         <form className="space-y-4">
           <div>
             <label className="block font-semibold text-sm mb-1">Username</label>
