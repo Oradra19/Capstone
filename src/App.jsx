@@ -1,20 +1,24 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import Home from './app/halaman-utama/page';
-import Login from './app/halaman-login/page';
-import Register from './app/halaman-register/page';
-import UtamaLogin from './app/halaman-utama-login/page';
-import UtamaProfil from './app/halaman-utama-profil/page';
+import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+import Home from "./app/halaman-utama/page";
+import Login from "./app/halaman-login/page";
+import Register from "./app/halaman-register/page";
+import ForgotPassword from "./app/halaman-forgot-password/page";
+import UtamaLogin from "./app/halaman-utama-login/page";
+import UtamaProfil from "./app/halaman-utama-profil/page";
 import PageDetailWisata from "./app/detail-wisata/page.jsx";
 import Favorite from "./app/halaman-favorit/page";
-import ForgotPassword from './app/halaman-forgot-password/page';
 import Profile from "./app/halaman-profil/page.jsx";
 import Plan from "./app/halaman-plan/page.jsx";
 import PlanDetail from "./app/plan-detail/page.jsx";
 import BuatPlan from "./app/buat-plan/page.jsx";
-import HasilSearch from "./app/halaman-search/page.jsx";  
+import HasilSearch from "./app/halaman-search/page.jsx";
 import KategoriTempat from "./app/kategori-tempat/page.jsx";
-
 
 function AppRoutes({ user, setUser }) {
   const location = useLocation();
@@ -25,7 +29,7 @@ function AppRoutes({ user, setUser }) {
     <>
       <Routes location={backgroundLocation || location}>
         <Route path="/" element={<Home user={user} />} />
-        <Route path="/register" element={<Register />} /> 
+        <Route path="/register" element={<Register />} />
         <Route path="/utamalogin" element={<UtamaLogin />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/utamaprofil" element={<UtamaProfil />} />
@@ -37,8 +41,6 @@ function AppRoutes({ user, setUser }) {
         <Route path="/buat-plan" element={<BuatPlan />} />
         <Route path="/search" element={<HasilSearch />} />
         <Route path="/kategori/:nama" element={<KategoriTempat />} />
-        
-
       </Routes>
 
       {backgroundLocation && (
@@ -63,4 +65,3 @@ function App() {
 }
 
 export default App;
-

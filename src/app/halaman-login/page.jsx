@@ -7,16 +7,17 @@ const Login = () => {
 
   const backgroundLocation = location.state?.backgroundLocation || location;
 
-  const handleSignUp = () => {
-    navigate("/register", { state: { backgroundLocation } });
+  const handleForgotPassword = () => {
+    const bgLocation = location.state?.backgroundLocation || location;
+    navigate("/forgot-password", { state: { backgroundLocation: bgLocation } });
   };
-
   const handleClose = () => {
     navigate(-1);
   };
 
-  const handleForgotPassword = () => {
-    navigate("/forgot-password", { state: { backgroundLocation } });
+  const handleSignUp = () => {
+    const bgLocation = location.state?.backgroundLocation || location;
+    navigate("/register", { state: { backgroundLocation: bgLocation } });
   };
 
   return (
