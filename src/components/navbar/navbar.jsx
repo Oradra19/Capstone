@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../firebase/firebase"; // sesuaikan dengan path file firebase.js
 
 const Navbar = () => {
   const location = useLocation();
@@ -8,28 +10,33 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    const loggedInStatus = localStorage.getItem("isLoggedIn") === "true";
-    setIsLoggedIn(loggedInStatus);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+        console.log("User logged in:", user);
+        setUserName(user.displayName || user.email || "User");
+      } else {
+        setIsLoggedIn(false);
+        setUserName("");
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    localStorage.setItem("isLoggedIn", "false");
+    auth.signOut();
     setDropdownOpen(false);
-  };
-
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-    localStorage.setItem("isLoggedIn", "true");
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchKeyword.trim() !== "") {
       navigate(`/search?query=${encodeURIComponent(searchKeyword)}`);
-      setSearchKeyword(""); 
+      setSearchKeyword("");
     }
   };
 
@@ -53,7 +60,7 @@ const Navbar = () => {
       <div className="flex gap-2 items-center relative">
         {!isLoggedIn ? (
           <>
-            <Link to="/login" state={{ backgroundLocation: location }} className="bg-white text-black-700 px-5 py-2 text-sm flex items-center gap-2 rounded-full shadow" onClick={handleLogin}>
+            <Link to="/login" state={{ backgroundLocation: location }} className="bg-white text-black-700 px-5 py-2 text-sm flex items-center gap-2 rounded-full shadow">
               <i className="fas fa-user-circle text-black-500 text-lg"></i>
               <span className="font-semibold">Log in</span>
             </Link>
@@ -67,7 +74,7 @@ const Navbar = () => {
             <button className="flex items-center gap-2 px-4 py-2 rounded-full text-sm text-black" onClick={() => setDropdownOpen(!dropdownOpen)}>
               <i className="fas fa-user-circle text-white text-xl"></i>
               <img src="/assets/icons/user-profile.png" alt="User" className="w-6 h-6 rounded" />
-              <span className="font-bold">KENZABAR</span>
+              <span className="font-bold">{userName}</span>
               <i className="fas fa-chevron-down text-xs text-black"></i>
             </button>
 

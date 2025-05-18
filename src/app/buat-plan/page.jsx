@@ -12,7 +12,6 @@ import {
   Autocomplete,
   Paper,
 } from "@mui/material";
-import { dataWisata } from "../../components/listwisata";
 import ProfileDropdown from "../../components/navbar/profiledropdown";
 
 const BuatPlan = () => {

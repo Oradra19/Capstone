@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -8,17 +8,19 @@ import {
 import Home from "./app/halaman-utama/page";
 import Login from "./app/halaman-login/page";
 import Register from "./app/halaman-register/page";
-import ForgotPassword from "./app/halaman-forgot-password/page";
-import UtamaLogin from "./app/halaman-utama-login/page";
-import UtamaProfil from "./app/halaman-utama-profil/page";
 import PageDetailWisata from "./app/detail-wisata/page.jsx";
 import Favorite from "./app/halaman-favorit/page";
+import ForgotPassword from "./app/halaman-forgot-password/page";
 import Profile from "./app/halaman-profil/page.jsx";
 import Plan from "./app/halaman-plan/page.jsx";
 import PlanDetail from "./app/plan-detail/page.jsx";
 import BuatPlan from "./app/buat-plan/page.jsx";
 import HasilSearch from "./app/halaman-search/page.jsx";
 import KategoriTempat from "./app/kategori-tempat/page.jsx";
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import FormWisata from "./components/formwisatainput.jsx";
+
 
 function AppRoutes({ user, setUser }) {
   const location = useLocation();
@@ -29,10 +31,8 @@ function AppRoutes({ user, setUser }) {
     <>
       <Routes location={backgroundLocation || location}>
         <Route path="/" element={<Home user={user} />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/utamalogin" element={<UtamaLogin />} />
+        <Route path="/register" element={<Register />} /> 
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/utamaprofil" element={<UtamaProfil />} />
         <Route path="/detail/:id" element={<PageDetailWisata />} />
         <Route path="/favorite" element={<Favorite />} />
         <Route path="/profil" element={<Profile />} />
@@ -40,6 +40,8 @@ function AppRoutes({ user, setUser }) {
         <Route path="/plan/:id" element={<PlanDetail />} />
         <Route path="/buat-plan" element={<BuatPlan />} />
         <Route path="/search" element={<HasilSearch />} />
+        
+          <Route path="/formwisata" element={<FormWisata />} />
         <Route path="/kategori/:nama" element={<KategoriTempat />} />
       </Routes>
 
@@ -56,6 +58,22 @@ function AppRoutes({ user, setUser }) {
 
 function App() {
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7A7-hASzNuBwdubBMUq8ScwLYtbeqK08",
+      authDomain: "destinasiku-b882d.firebaseapp.com",
+      projectId: "destinasiku-b882d",
+      storageBucket: "destinasiku-b882d.firebasestorage.app",
+      messagingSenderId: "857884833492",
+      appId: "1:857884833492:web:6d749eab8e126b9473ed41",
+      measurementId: "G-01J0MLR78B",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  }, []);
 
   return (
     <Router>

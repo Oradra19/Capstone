@@ -1,30 +1,47 @@
 import { useParams } from "react-router-dom";
-import { dataWisata } from "../../components/listwisata-detail";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../firebase/firebase";
+import { useEffect, useState } from "react";
 import DetailWisata from "../../components/detailwisata";
 
 export default function PageDetailWisata() {
   const { id } = useParams();
-  const wisataId = parseInt(id);
+  const [wisata, setWisata] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const wisata = dataWisata.find(w => w.id === wisataId);
+  useEffect(() => {
+    const fetchWisata = async () => {
+      try {
+        const docRef = doc(db, "wisata", id);
+        const docSnap = await getDoc(docRef);
 
-  console.log("ID dari URL:", wisataId);
-  console.log("Wisata ditemukan:", wisata);
+        if (docSnap.exists()) {
+          setWisata({ id: docSnap.id, ...docSnap.data() });
+        } else {
+          setWisata(null);
+        }
+      } catch (error) {
+        console.error("Gagal mengambil detail wisata:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (!wisata) return <p>Wisata tidak ditemukan</p>;
+    fetchWisata();
+  }, [id]);
 
-  const mapsEmbedUrl = `https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${wisata.latitude},${wisata.longitude}`;
+  if (loading) return <p className="text-center mt-6">Memuat detail...</p>;
+  if (!wisata) return <p className="text-center mt-6">Wisata tidak ditemukan</p>;
 
   return (
     <DetailWisata
       nama={wisata.nama}
       lokasi={wisata.lokasi}
       deskripsi={wisata.deskripsi}
-      gambar={wisata.image}
+      gambar={wisata.gambar}
       harga={wisata.harga}
       rating={wisata.rating}
-      mapsEmbedUrl={mapsEmbedUrl}
+      mapsLink={wisata.gmaps}
     />
   );
 }
-

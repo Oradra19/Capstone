@@ -1,16 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../firebase/firebase"; // pastikan ini adalah instance Firestore-mu
 import ProfileDropdown from "../../components/navbar/profiledropdown";
-
 
 const Favorite = () => {
   const [favorites, setFavorites] = useState([]);
+  const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("favorite")) || [];
-    setFavorites(stored);
+    const auth = getAuth();
+
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUserId(user.uid);
+        const favoritesRef = collection(db, "users", user.uid, "favorites");
+        const snapshot = await getDocs(favoritesRef);
+        const favData = snapshot.docs.map(doc => doc.data());
+        setFavorites(favData);
+      } else {
+        setUserId(null);
+        setFavorites([]);
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const handleClick = (id) => {
@@ -26,7 +43,9 @@ const Favorite = () => {
 
         <div className="space-y-4 px-4 md:px-16 pb-6">
           {favorites.length === 0 ? (
-            <p className="text-center text-gray-500">Belum ada destinasi favorit.</p>
+            <p className="text-center text-gray-500">
+              {userId ? "Belum ada destinasi favorit." : "Silakan login untuk melihat favorit."}
+            </p>
           ) : (
             favorites.map((item, index) => (
               <div
