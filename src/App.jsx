@@ -21,8 +21,10 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import FormWisata from "./components/formwisatainput.jsx";
 
+// ✅ Tambahkan ini
+import { AuthProvider } from "./contexts/AuthContext"; // sesuaikan path
 
-function AppRoutes({ user, setUser }) {
+function AppRoutes() {
   const location = useLocation();
   const state = location.state;
   const backgroundLocation = state?.backgroundLocation;
@@ -30,8 +32,8 @@ function AppRoutes({ user, setUser }) {
   return (
     <>
       <Routes location={backgroundLocation || location}>
-        <Route path="/" element={<Home user={user} />} />
-        <Route path="/register" element={<Register />} /> 
+        <Route path="/" element={<Home />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/detail/:id" element={<PageDetailWisata />} />
         <Route path="/favorite" element={<Favorite />} />
@@ -40,14 +42,13 @@ function AppRoutes({ user, setUser }) {
         <Route path="/plan/:id" element={<PlanDetail />} />
         <Route path="/buat-plan" element={<BuatPlan />} />
         <Route path="/search" element={<HasilSearch />} />
-        
-          <Route path="/formwisata" element={<FormWisata />} />
+        <Route path="/formwisata" element={<FormWisata />} />
         <Route path="/kategori/:nama" element={<KategoriTempat />} />
       </Routes>
 
       {backgroundLocation && (
         <Routes>
-          <Route path="/login" element={<Login setUser={setUser} />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
@@ -57,8 +58,6 @@ function AppRoutes({ user, setUser }) {
 }
 
 function App() {
-  const [user, setUser] = useState(null);
-
   useEffect(() => {
     const firebaseConfig = {
       apiKey: "AIzaSyA7A7-hASzNuBwdubBMUq8ScwLYtbeqK08",
@@ -70,15 +69,16 @@ function App() {
       measurementId: "G-01J0MLR78B",
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
   }, []);
 
   return (
-    <Router>
-      <AppRoutes user={user} setUser={setUser} />
-    </Router>
+    <AuthProvider> {/* ✅ Bungkus semua dengan AuthProvider */}
+      <Router>
+        <AppRoutes />
+      </Router>
+    </AuthProvider>
   );
 }
 

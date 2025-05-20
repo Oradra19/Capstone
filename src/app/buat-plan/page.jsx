@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   TextField,
@@ -8,80 +8,126 @@ import {
   Box,
   Card,
   CardContent,
-  CardMedia,
   Autocomplete,
   Paper,
 } from "@mui/material";
 import ProfileDropdown from "../../components/navbar/profiledropdown";
+import { db } from "../../firebase/firebase"; 
+import { collection, getDocs } from "firebase/firestore";
+import { addDoc, doc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { useAuth } from "../../contexts/AuthContext"; // pastikan kamu punya context Auth
+
 
 const BuatPlan = () => {
   const [planName, setPlanName] = useState("");
   const [planDate, setPlanDate] = useState("");
   const [selectedWisata, setSelectedWisata] = useState([]);
-  const [planId, setPlanId] = useState(1);
+  const { user } = useAuth(); // gunakan context untuk cek login
   const [plans, setPlans] = useState([]);
+  const [wisataList, setWisataList] = useState([]); 
 
-  
+  // Ambil data wisata dari Firebase
+  useEffect(() => {
+    const fetchDataWisata = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "wisata")); 
+        const data = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setWisataList(data); 
+      } catch (error) {
+        console.error("Gagal mengambil data wisata:", error);
+      }
+    };
 
-  const handleCreatePlan = () => {
-    if (!planName || !planDate || selectedWisata.length === 0) {
-      alert("Lengkapi semua data terlebih dahulu!");
+    fetchDataWisata();
+  }, []);
+
+  const handleCreatePlan = async () => {
+  if (!planName || !planDate || selectedWisata.length === 0) {
+    alert("Lengkapi semua data terlebih dahulu!");
+    return;
+  }
+
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      alert("Anda harus login terlebih dahulu!");
       return;
     }
-  
-    const savedPlans = JSON.parse(localStorage.getItem("customPlans")) || [];
-  
-    const isDuplicate = savedPlans.some(
-      (plan) => plan.name === planName && plan.date === planDate
-    );
-    if (isDuplicate) {
-      alert("Plan dengan nama dan tanggal yang sama sudah ada!");
-      return;
-    }
-  
-    // Ambil total jumlah plan dari localStorage + state lokal
-    const totalPlans = savedPlans.length + plans.length;
-  
+
+    const uid = user.uid;
+
+    // Buat object plan baru
     const newPlan = {
-      planId: `Plan ${totalPlans + 1}`, // ← penomoran plan yang benar
       name: planName,
       date: planDate,
       destinations: selectedWisata,
+      createdAt: new Date(),
     };
-  
-    const updatedPlans = [...plans, newPlan]; // hanya update state lokal dulu
-  
-    setPlans(updatedPlans); // update state
+
+    // Simpan ke subkoleksi `plans` di dalam dokumen user
+    await addDoc(collection(db, "users", uid, "plans"), newPlan);
+
+    alert("Plan berhasil disimpan ke Firebase!");
+
+    // Reset form
     setPlanName("");
     setPlanDate("");
     setSelectedWisata([]);
-  };
-  
-  
-  
-  const handleSavePlans = () => {
+  } catch (error) {
+    console.error("Gagal menyimpan plan ke Firebase:", error);
+    alert("Terjadi kesalahan saat menyimpan plan.");
+  }
+};
+
+  const handleSavePlans = async () => {
     if (plans.length === 0) {
       alert("Tidak ada plan untuk disimpan!");
       return;
     }
-  
-    const existingPlans = JSON.parse(localStorage.getItem("customPlans")) || [];
-    const updatedPlans = [...existingPlans, ...plans];
-  
-    localStorage.setItem("customPlans", JSON.stringify(updatedPlans));
-    alert("Rencana berhasil disimpan ke halaman Plan!");
-    setPlans([]);
+
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      alert("Anda harus login terlebih dahulu!");
+      return;
+    }
+
+    const uid = user.uid;
+
+    try {
+      for (const plan of plans) {
+        const newPlan = {
+          name: plan.name,
+          date: plan.date,
+          destinations: plan.destinations,
+          createdAt: new Date(),
+        };
+        await addDoc(collection(db, "users", uid, "plans"), newPlan);
+      }
+
+      alert("Rencana berhasil disimpan ke halaman Plan di Firebase!");
+      setPlans([]);
+    } catch (error) {
+      console.error("Gagal menyimpan rencana ke Firebase:", error);
+      alert("Terjadi kesalahan saat menyimpan rencana.");
+    }
   };
-  
+
+
   const formatDate = (isoDate) => {
     const dateObj = new Date(isoDate);
-    const day = String(dateObj.getDate()).padStart(2, '0');
-    const month = String(dateObj.getMonth() + 1).padStart(2, '0'); // bulan dimulai dari 0
+    const day = String(dateObj.getDate()).padStart(2, "0");
+    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
     const year = dateObj.getFullYear();
     return `${day}-${month}-${year}`;
   };
-  
-  
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F9FAFC] font-montserrat">
@@ -116,7 +162,7 @@ const BuatPlan = () => {
               <Grid item xs={12}>
                 <Autocomplete
                   multiple
-                  options={dataWisata}
+                  options={wisataList} // ← gunakan data dari Firebase
                   getOptionLabel={(option) => option.nama}
                   value={selectedWisata}
                   onChange={(event, newValue) => setSelectedWisata(newValue)}
@@ -176,7 +222,6 @@ const BuatPlan = () => {
                     Tanggal: {formatDate(plan.date)}
                   </Typography>
 
-
                   <Grid container spacing={2}>
                     {plan.destinations.map((w, idx) => (
                       <Grid item xs={12} sm={6} md={4} key={idx}>
@@ -228,20 +273,13 @@ const BuatPlan = () => {
           )}
         </Container>
 
-
-{plans.length > 0 && (
-  <Box sx={{ textAlign: "center", mb: 4 }}>
-    <Button
-      variant="contained"
-      color="success"
-      onClick={handleSavePlans}
-    >
-      Simpan Plan
-    </Button>
-  </Box>
-)}
-
-
+        {plans.length > 0 && (
+          <Box sx={{ textAlign: "center", mb: 4 }}>
+            <Button variant="contained" color="success" onClick={handleSavePlans}>
+              Simpan Plan
+            </Button>
+          </Box>
+        )}
       </div>
 
       <footer className="bg-gray-800 py-4 mt-10">

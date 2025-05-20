@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../firebase/firebase"; // pastikan ini adalah instance Firestore-mu
+import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
+import { db } from "../../firebase/firebase";
 import ProfileDropdown from "../../components/navbar/profiledropdown";
 
 const Favorite = () => {
@@ -11,16 +11,24 @@ const Favorite = () => {
   const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
 
+  // Fungsi ambil data favorit dari Firestore
+  const fetchFavorites = async (uid) => {
+    const favoritesRef = collection(db, "users", uid, "favorites");
+    const snapshot = await getDocs(favoritesRef);
+    const favData = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setFavorites(favData);
+  };
+
   useEffect(() => {
     const auth = getAuth();
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setUserId(user.uid);
-        const favoritesRef = collection(db, "users", user.uid, "favorites");
-        const snapshot = await getDocs(favoritesRef);
-        const favData = snapshot.docs.map(doc => doc.data());
-        setFavorites(favData);
+        await fetchFavorites(user.uid);
       } else {
         setUserId(null);
         setFavorites([]);
@@ -31,7 +39,22 @@ const Favorite = () => {
   }, []);
 
   const handleClick = (id) => {
-    navigate(`/detailwisata/${id}`);
+    navigate(`/detail/${id}`);
+  };
+
+  // Fungsi hapus favorit
+  const handleDelete = async (favId) => {
+    if (!userId) return;
+
+    try {
+      await deleteDoc(doc(db, "users", userId, "favorites", favId));
+      // Setelah hapus, refresh list favorit
+      fetchFavorites(userId);
+      alert("Destinasi favorit berhasil dihapus.");
+    } catch (error) {
+      console.error("Gagal menghapus favorit:", error);
+      alert("Gagal menghapus favorit.");
+    }
   };
 
   return (
@@ -47,22 +70,32 @@ const Favorite = () => {
               {userId ? "Belum ada destinasi favorit." : "Silakan login untuk melihat favorit."}
             </p>
           ) : (
-            favorites.map((item, index) => (
+            favorites.map((item) => (
               <div
-                key={index}
-                onClick={() => handleClick(item.id)}
-                className="flex items-center bg-white rounded-xl shadow-md p-4 gap-4 border cursor-pointer hover:bg-gray-100"
+                key={item.id}
+                className="flex items-center bg-white rounded-xl shadow-md p-4 gap-4 border hover:bg-gray-100"
               >
                 <img
                   src={item.gambar}
                   alt={item.nama}
-                  className="w-24 h-20 object-cover rounded-md"
+                  className="w-24 h-20 object-cover rounded-md cursor-pointer"
+                  onClick={() => handleClick(item.wisataId || item.id)} // pake wisataId biar arah ke detail
                 />
-                <div className="flex-1">
+                <div
+                  className="flex-1 cursor-pointer"
+                  onClick={() => handleClick(item.wisataId || item.id)}
+                >
                   <h2 className="text-lg font-extrabold">{item.nama}</h2>
                   <p className="italic text-gray-600">{item.lokasi}</p>
                 </div>
                 <FaStar className="text-yellow-500 text-2xl border-2 border-yellow-500 rounded-full p-1" />
+
+                <button
+                  onClick={() => handleDelete(item.id)}
+                  className="ml-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+                >
+                  Hapus
+                </button>
               </div>
             ))
           )}
