@@ -1,118 +1,88 @@
 import React, { useState, useEffect } from "react";
 
-const ModalForm = ({ isOpen, onClose, initialData, onSubmit }) => {
-  const [formData, setFormData] = useState({
-    nama: "",
+const ModalFormUser = ({ isOpen, onClose, onSubmit, initialData }) => {
+  const [form, setForm] = useState({
+    username: "",
     email: "",
+    password: "",
     role: "user",
   });
 
   useEffect(() => {
     if (initialData) {
-      setFormData({
-        nama: initialData.nama || "",
-        email: initialData.email || "",
-        role: initialData.role || "user",
-      });
+      setForm(initialData);
     } else {
-      setFormData({
-        nama: "",
-        email: "",
-        role: "user",
-      });
+      setForm({ username: "", email: "", password: "", role: "user" });
     }
   }, [initialData]);
 
-  if (!isOpen) return null;
-
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Validasi sederhana
-    if (!formData.nama.trim()) {
-      alert("Nama harus diisi!");
-      return;
-    }
-    if (!formData.email.trim()) {
-      alert("Email harus diisi!");
-      return;
-    }
-    // Email sederhana cek format
-    if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      alert("Email tidak valid!");
-      return;
-    }
-
-    onSubmit(formData);
+    onSubmit(form);
     onClose();
   };
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4">
-          {initialData ? "Edit User" : "Tambah User"}
-        </h2>
+  if (!isOpen) return null;
 
-        <form onSubmit={handleSubmit}>
-          <label className="block mb-2 font-semibold">Nama</label>
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+      <div className="bg-white p-6 rounded-lg w-[90%] max-w-md relative">
+        <button onClick={onClose} className="absolute top-2 right-2 text-red-500 font-bold text-xl">
+          &times;
+        </button>
+        <h2 className="text-lg font-bold mb-4">{initialData ? "Edit User" : "Tambah User"}</h2>
+        <form onSubmit={handleSubmit} className="space-y-3">
           <input
             type="text"
-            name="nama"
-            value={formData.nama}
+            name="username"
+            placeholder="Username"
+            value={form.username}
             onChange={handleChange}
-            placeholder="Nama lengkap"
-            className="w-full p-2 border mb-4 rounded"
+            className="w-full border px-3 py-2 rounded"
+            required
           />
-
-          <label className="block mb-2 font-semibold">Email</label>
           <input
             type="email"
             name="email"
-            value={formData.email}
+            placeholder="Email"
+            value={form.email}
             onChange={handleChange}
-            placeholder="email@example.com"
-            className="w-full p-2 border mb-4 rounded"
+            className="w-full border px-3 py-2 rounded"
+            required
           />
-
-          <label className="block mb-2 font-semibold">Role</label>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+            required={!initialData}
+          />
           <select
             name="role"
-            value={formData.role}
+            value={form.role}
             onChange={handleChange}
-            className="w-full p-2 border mb-6 rounded"
+            className="w-full border px-3 py-2 rounded"
+            required
           >
             <option value="user">User</option>
             <option value="admin">Admin</option>
           </select>
-
-          <div className="flex justify-end gap-3">
-            <button
-              type="button"
-              onClick={() => {
-                onClose();
-                setFormData({ nama: "", email: "", role: "user" });
-              }}
-              className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500 transition"
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-            >
-              Simpan
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded w-full font-semibold"
+          >
+            {initialData ? "Simpan Perubahan" : "Tambah User"}
+          </button>
         </form>
       </div>
     </div>
   );
 };
 
-export default ModalForm;
+export default ModalFormUser;

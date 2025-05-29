@@ -12,31 +12,34 @@ import {
   Paper,
 } from "@mui/material";
 import ProfileDropdown from "../../components/navbar/profiledropdown";
-import { db } from "../../firebase/firebase"; 
+import { db } from "../../firebase/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { addDoc, doc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useAuth } from "../../contexts/AuthContext"; // pastikan kamu punya context Auth
+import { useNavigate } from "react-router-dom";
 
 
 const BuatPlan = () => {
   const [planName, setPlanName] = useState("");
+  const navigate = useNavigate();
   const [planDate, setPlanDate] = useState("");
   const [selectedWisata, setSelectedWisata] = useState([]);
+  const [planPreview, setPlanPreview] = useState(null);
   const { user } = useAuth(); // gunakan context untuk cek login
   const [plans, setPlans] = useState([]);
-  const [wisataList, setWisataList] = useState([]); 
+  const [wisataList, setWisataList] = useState([]);
 
   // Ambil data wisata dari Firebase
   useEffect(() => {
     const fetchDataWisata = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "wisata")); 
+        const querySnapshot = await getDocs(collection(db, "wisata"));
         const data = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-        setWisataList(data); 
+        setWisataList(data);
       } catch (error) {
         console.error("Gagal mengambil data wisata:", error);
       }
@@ -45,80 +48,65 @@ const BuatPlan = () => {
     fetchDataWisata();
   }, []);
 
-  const handleCreatePlan = async () => {
-  if (!planName || !planDate || selectedWisata.length === 0) {
-    alert("Lengkapi semua data terlebih dahulu!");
-    return;
-  }
-
-  try {
-    const auth = getAuth();
-    const user = auth.currentUser;
-
-    if (!user) {
-      alert("Anda harus login terlebih dahulu!");
+  const handleCreatePlan = () => {
+    if (!planName || !planDate || selectedWisata.length === 0) {
+      alert("Lengkapi semua data terlebih dahulu!");
       return;
     }
 
-    const uid = user.uid;
-
-    // Buat object plan baru
+    // Simpan data plan sementara ke state untuk preview
     const newPlan = {
       name: planName,
       date: planDate,
       destinations: selectedWisata,
-      createdAt: new Date(),
     };
 
-    // Simpan ke subkoleksi `plans` di dalam dokumen user
+    setPlanPreview(newPlan);
+
+    // Jangan reset form supaya user bisa edit lagi kalau perlu
+  };
+
+  // Ubah handleSavePlans supaya hanya simpan planPreview ke Firebase
+  const handleSavePlan = async () => {
+  if (!planPreview) {
+    alert("Tidak ada rencana untuk disimpan!");
+    return;
+  }
+
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  if (!user) {
+    alert("Anda harus login terlebih dahulu!");
+    return;
+  }
+
+  const uid = user.uid;
+
+  try {
+    const newPlan = {
+      name: planPreview.name,
+      date: planPreview.date,
+      destinations: planPreview.destinations,
+      createdAt: new Date(),
+    };
     await addDoc(collection(db, "users", uid, "plans"), newPlan);
 
-    alert("Plan berhasil disimpan ke Firebase!");
+    alert("Rencana berhasil disimpan!");
 
-    // Reset form
+    // Reset form dan preview
+    setPlanPreview(null);
     setPlanName("");
     setPlanDate("");
     setSelectedWisata([]);
+
+    // Arahkan ke halaman /plan
+    navigate("/plan");
   } catch (error) {
-    console.error("Gagal menyimpan plan ke Firebase:", error);
-    alert("Terjadi kesalahan saat menyimpan plan.");
+    console.error("Gagal menyimpan rencana:", error);
+    alert("Terjadi kesalahan saat menyimpan.");
   }
 };
-
-  const handleSavePlans = async () => {
-    if (plans.length === 0) {
-      alert("Tidak ada plan untuk disimpan!");
-      return;
-    }
-
-    const auth = getAuth();
-    const user = auth.currentUser;
-
-    if (!user) {
-      alert("Anda harus login terlebih dahulu!");
-      return;
-    }
-
-    const uid = user.uid;
-
-    try {
-      for (const plan of plans) {
-        const newPlan = {
-          name: plan.name,
-          date: plan.date,
-          destinations: plan.destinations,
-          createdAt: new Date(),
-        };
-        await addDoc(collection(db, "users", uid, "plans"), newPlan);
-      }
-
-      alert("Rencana berhasil disimpan ke halaman Plan di Firebase!");
-      setPlans([]);
-    } catch (error) {
-      console.error("Gagal menyimpan rencana ke Firebase:", error);
-      alert("Terjadi kesalahan saat menyimpan rencana.");
-    }
-  };
 
 
   const formatDate = (isoDate) => {
@@ -191,94 +179,76 @@ const BuatPlan = () => {
           </Paper>
         </Container>
 
-        <Container maxWidth="md">
-          <Typography variant="h5" fontWeight="bold" gutterBottom>
-            Rencana yang Telah Dibuat
-          </Typography>
-          {plans.length === 0 ? (
-            <Typography variant="body1" color="text.secondary">
-              Belum ada rencana dibuat.
+        {planPreview && (
+          <Container maxWidth="md">
+            <Typography variant="h5" fontWeight="bold" gutterBottom>
+              Preview Rencana
             </Typography>
-          ) : (
-            plans.map((plan, index) => (
-              <Card
-                key={index}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 2,
-                  marginBottom: 4,
-                  padding: 2,
-                  backgroundColor: "#ffffff",
-                  borderRadius: 3,
-                  boxShadow: 3,
-                }}
-              >
-                <CardContent>
-                  <Typography variant="h6" color="primary">
-                    {plan.planId}: {plan.name}
-                  </Typography>
-                  <Typography variant="body1" sx={{ mb: 2 }}>
-                    Tanggal: {formatDate(plan.date)}
-                  </Typography>
+            <Card
+              sx={{
+                padding: 2,
+                marginBottom: 4,
+                backgroundColor: "#fff",
+                borderRadius: 3,
+              }}
+            >
+              <Typography variant="h6" color="primary">
+                {planPreview.name}
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                Tanggal: {formatDate(planPreview.date)}
+              </Typography>
 
-                  <Grid container spacing={2}>
-                    {plan.destinations.map((w, idx) => (
-                      <Grid item xs={12} sm={6} md={4} key={idx}>
-                        <Box
-                          sx={{
-                            border: "1px solid #ccc",
-                            borderRadius: 2,
-                            overflow: "hidden",
-                            boxShadow: 1,
-                            transition: "transform 0.2s",
-                            "&:hover": {
-                              transform: "scale(1.02)",
-                            },
+              <Grid container spacing={2}>
+                {planPreview.destinations.map((w, idx) => (
+                  <Grid item xs={12} sm={6} md={4} key={idx}>
+                    <Box
+                      sx={{
+                        border: "1px solid #ccc",
+                        borderRadius: 2,
+                        overflow: "hidden",
+                        boxShadow: 1,
+                        transition: "transform 0.2s",
+                        "&:hover": { transform: "scale(1.02)" },
+                      }}
+                    >
+                      <Box
+                        sx={{ width: "100%", height: 160, overflow: "hidden" }}
+                      >
+                        <img
+                          src={w.gambar}
+                          alt={w.nama}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
                           }}
-                        >
-                          <Box
-                            sx={{
-                              width: "100%",
-                              height: 160,
-                              overflow: "hidden",
-                            }}
-                          >
-                            <img
-                              src={w.image}
-                              alt={w.nama}
-                              style={{
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "cover",
-                                display: "block",
-                              }}
-                            />
-                          </Box>
-                          <Box sx={{ p: 1 }}>
-                            <Typography variant="subtitle1" fontWeight="bold">
-                              {w.nama}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {w.lokasi}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      </Grid>
-                    ))}
+                        />
+                      </Box>
+                      <Box sx={{ p: 1 }}>
+                        <Typography variant="subtitle1" fontWeight="bold">
+                          {w.nama}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {w.lokasi}
+                        </Typography>
+                      </Box>
+                    </Box>
                   </Grid>
-                </CardContent>
-              </Card>
-            ))
-          )}
-        </Container>
+                ))}
+              </Grid>
 
-        {plans.length > 0 && (
-          <Box sx={{ textAlign: "center", mb: 4 }}>
-            <Button variant="contained" color="success" onClick={handleSavePlans}>
-              Simpan Plan
-            </Button>
-          </Box>
+              <Box sx={{ mt: 2, textAlign: "center" }}>
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={handleSavePlan}
+                >
+                  Simpan Rencana
+                </Button>
+              </Box>
+            </Card>
+          </Container>
         )}
       </div>
 
@@ -286,9 +256,7 @@ const BuatPlan = () => {
         <p className="text-center text-lg text-blue-600">
           Welcome to our website!
         </p>
-        <p className="text-center text-sm text-white">
-          copyright @timcapstone
-        </p>
+        <p className="text-center text-sm text-white">copyright @timcapstone</p>
       </footer>
     </div>
   );

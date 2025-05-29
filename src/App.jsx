@@ -20,7 +20,6 @@ import KategoriTempat from "./app/kategori-tempat/page.jsx";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import FormWisata from "./components/formwisatainput.jsx";
-import DataUserPage from "./app/admin/data-user/page.jsx";
 import DataWisataPage from "./app/admin/data-wisata/page.jsx";
 
 // ✅ Tambahkan ini
@@ -46,7 +45,6 @@ function AppRoutes() {
         <Route path="/search" element={<HasilSearch />} />
         <Route path="/formwisata" element={<FormWisata />} />
         <Route path="/kategori/:nama" element={<KategoriTempat />} />
-        <Route path="/admin/data-user" element={<DataUserPage />} />
         <Route path="/admin/data-wisata" element={<DataWisataPage />} />
       </Routes>
 

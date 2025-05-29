@@ -45,7 +45,7 @@ const Login = () => {
       setError("");
 
       if (role === "admin") {
-        navigate("/formwisata");
+        navigate("/admin/data-wisata");
       } else {
         navigate("/");
       }

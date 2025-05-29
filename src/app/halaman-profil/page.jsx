@@ -9,7 +9,7 @@ const Profile = () => {
   const [showPasswordModal, setShowPasswordModal] = useState(false); // modal baru
   const [newPassword, setNewPassword] = useState("");
 
-  const [profileImage, setProfileImage] = useState("/assets/icons/user-profil2.png");
+  const [profileImage, setProfileImage] = useState("/assets/icons/default.jpg");
 
   const [profile, setProfile] = useState({
     namaTampilan: "",
@@ -29,26 +29,30 @@ const Profile = () => {
   const db = getFirestore(app);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        setCurrentUser(user);
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        const userData = docSnap.exists() ? docSnap.data() : {};
+  const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      setCurrentUser(user);
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+      const userData = docSnap.exists() ? docSnap.data() : {};
 
-        setProfile((prev) => ({
-          ...prev,
-          ...userData,
-          email: user.email || "",
-          username: user.displayName || userData.username || "",
-          profileImageUrl: userData.profileImageUrl || "/assets/icons/user-profil2.png",
-        }));
+      // 🔽 GANTI DENGAN INI
+      const profileImageUrl = userData.profileImageUrl || "/assets/icons/default.jpg";
 
-        setProfileImage(userData.profileImageUrl || "/assets/icons/user-profil2.png");
-      }
-    });
-    return () => unsubscribe();
-  }, []);
+      setProfile((prev) => ({
+        ...prev,
+        ...userData,
+        email: user.email || "",
+        username: user.displayName || userData.username || "",
+        profileImageUrl,
+      }));
+
+      setProfileImage(profileImageUrl);
+    }
+  });
+  return () => unsubscribe();
+}, []);
+
 
   const openModal = () => {
     setFormData(profile);
@@ -72,51 +76,89 @@ const Profile = () => {
     }
   };
 
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Buat URL sementara untuk preview
-      const imageUrl = URL.createObjectURL(file);
-      setProfileImage(imageUrl);
 
-      // Simpan foto profil ke Firestore (di sini simpan URL lokal sebagai contoh, idealnya ke Storage)
-      // Kamu bisa tambahkan upload ke Firebase Storage di sini jika ingin permanen
+  const uploadToCloudinary = async (gambar) => {
+  if (!gambar) return null; // kalau gambar null, artinya tidak ada upload baru
 
-      // Simpan URL ke Firestore (misal pakai base64 atau upload Storage dulu)
-      // Sekarang contoh hanya simpan nama file saja supaya gampang
-      // Untuk demo, simpan URL sementara saja:
-      try {
-        await setDoc(
-          doc(db, "users", currentUser.uid),
-          { profileImageUrl: imageUrl },
-          { merge: true }
-        );
-        setProfile((prev) => ({ ...prev, profileImageUrl: imageUrl }));
-        alert("Foto profil berhasil diubah!");
-        setShowImageOptions(false);
-      } catch (error) {
-        console.error("Gagal menyimpan foto profil:", error);
-        alert("Gagal menyimpan foto profil.");
-      }
+  const formData = new FormData();
+  formData.append("file", gambar);
+  formData.append("upload_preset", "foto_unsigned");
+
+  const res = await fetch(
+    "https://api.cloudinary.com/v1_1/dss5hxv5x/image/upload",
+    {
+      method: "POST",
+      body: formData,
     }
-  };
+  );
+
+  const data = await res.json();
+  if (!data.secure_url) {
+    console.error("Upload ke Cloudinary gagal:", data);
+    throw new Error("Upload ke Cloudinary gagal");
+  }
+  return data;  // kembalikan seluruh data agar bisa pakai public_id juga
+};
+
+const handleImageChange = async (e) => {
+  const file = e.target.files[0];
+  if (!file || !currentUser) return;
+
+  try {
+    const uploadResult = await uploadToCloudinary(file); // kirim file ke uploadToCloudinary
+    if (!uploadResult) {
+      alert("Gagal mengunggah gambar ke Cloudinary.");
+      return;
+    }
+
+    await setDoc(doc(db, "users", currentUser.uid), {
+      profileImageUrl: uploadResult.secure_url,  // pakai secure_url bukan uploadResult.url
+      cloudinaryPublicId: uploadResult.public_id,
+    }, { merge: true });
+
+    setProfile((prev) => ({ ...prev, profileImageUrl: uploadResult.secure_url }));
+    setProfileImage(uploadResult.secure_url);
+    setShowImageOptions(false);
+    alert("Foto profil berhasil diunggah!");
+  } catch (err) {
+    console.error("Gagal menyimpan URL ke Firestore:", err);
+    alert("Terjadi kesalahan saat menyimpan foto.");
+  }
+};
+
 
   const handleDeleteImage = async () => {
-    try {
-      setProfileImage("/assets/icons/user-profil2.png");
-      await setDoc(
-        doc(db, "users", currentUser.uid),
-        { profileImageUrl: "" },
-        { merge: true }
-      );
-      setProfile((prev) => ({ ...prev, profileImageUrl: "" }));
-      setShowImageOptions(false);
-      alert("Foto profil berhasil dihapus.");
-    } catch (error) {
-      console.error("Gagal menghapus foto profil:", error);
-      alert("Gagal menghapus foto profil.");
-    }
-  };
+  if (!currentUser) return;
+
+  try {
+    // Ganti foto ke default lokal
+    const defaultImage = "/assets/icons/default.jpg";
+
+    // Update Firestore: kosongkan URL Cloudinary dan public_id
+    await setDoc(
+      doc(db, "users", currentUser.uid),
+      {
+        profileImageUrl: "",
+        cloudinaryPublicId: ""
+      },
+      { merge: true }
+    );
+
+    // Update state
+    setProfileImage(defaultImage);
+    setProfile((prev) => ({
+      ...prev,
+      profileImageUrl: ""
+    }));
+
+    setShowImageOptions(false);
+    alert("Foto profil telah direset ke default.");
+  } catch (error) {
+    console.error("Gagal menghapus foto profil:", error);
+    alert("Terjadi kesalahan saat menghapus foto.");
+  }
+};
+
 
   // Fungsi untuk ubah password di modal baru
   const handleChangePassword = async () => {
