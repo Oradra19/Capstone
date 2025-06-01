@@ -9,7 +9,7 @@ const Kategori = () => {
     { nama: "Boyolali", img: "/assets/byl.png" },
     { nama: "Wonogiri", img: "/assets/wng.png" },
     { nama: "Klaten", img: "/assets/klt.png" },
-    { nama: "Yogyakarta", img: "/assets/skh.png" },
+    { nama: "Sukoharjo", img: "/assets/skh.png" },
     { nama: "Sragen", img: "/assets/sra.png" },
   ];
 
