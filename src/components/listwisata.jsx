@@ -17,15 +17,15 @@ export default function WisataList({ destinasi }) {
         <div
           key={item.id}
           onClick={() => handleClick(item.id)}
-          className="cursor-pointer bg-white p-4 shadow-md rounded-xl border-2 border-black flex gap-4 hover:bg-gray-100 transition"
+          className="cursor-pointer bg-white p-4 shadow-md rounded-xl border border-gray-300 flex flex-col md:flex-row gap-4 hover:bg-gray-100 transition"
         >
           <img
             src={item.gambar}
             alt={item.nama}
-            className="w-40 h-28 object-cover rounded-md"
+            className="w-full md:w-40 h-40 md:h-28 object-cover rounded-md"
           />
-          <div>
-            <h2 className="text-xl font-bold">{item.nama}</h2>
+          <div className="flex-1">
+            <h2 className="text-lg md:text-xl font-bold">{item.nama}</h2>
             <p className="text-sm text-gray-700 line-clamp-3">{item.deskripsi}</p>
             <p className="text-sm font-semibold mt-2 text-green-700">Rp{item.harga}</p>
           </div>

@@ -20,12 +20,12 @@ const Kategori = () => {
   return (
     <div className="-mt-10 px-6 relative z-10">
       <div className="bg-white rounded-2xl shadow-lg p-4 w-full max-w-[700px] h-auto mx-auto">
-        <div className="flex justify-center gap-6 w-max mx-auto">
+        <div className="flex gap-4 sm:gap-6 overflow-x-auto no-scrollbar">
           {kategoriList.map((kategori, index) => (
             <div
               key={index}
               onClick={() => handleClick(kategori.nama)}
-              className="flex flex-col items-center min-w-[64px] cursor-pointer"
+              className="flex-shrink-0 flex flex-col items-center w-16"
             >
               <img
                 src={kategori.img}

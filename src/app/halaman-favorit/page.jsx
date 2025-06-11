@@ -62,9 +62,9 @@ const Favorite = () => {
       <ProfileDropdown />
 
       <div className="flex-grow">
-        <h1 className="text-center text-4xl font-bold mb-6">Favorite</h1>
+        <h1 className="text-center text-2xl md:text-4xl font-bold mb-6">Favorite</h1>
 
-        <div className="space-y-4 px-4 md:px-16 pb-6">
+        <div className="space-y-4 px-4 md:px-16 pb-6 max-w-5xl mx-auto">
           {favorites.length === 0 ? (
             <p className="text-center text-gray-500">
               {userId ? "Belum ada destinasi favorit." : "Silakan login untuk melihat favorit."}
@@ -88,7 +88,8 @@ const Favorite = () => {
                   <h2 className="text-lg font-extrabold">{item.nama}</h2>
                   <p className="italic text-gray-600">{item.lokasi}</p>
                 </div>
-                <FaStar className="text-yellow-500 text-2xl border-2 border-yellow-500 rounded-full p-1" />
+                <FaStar className="text-yellow-500 text-xl md:text-2xl border-2 border-yellow-500 rounded-full p-1 flex-shrink-0" />
+
 
                 <button
                   onClick={() => handleDelete(item.id)}

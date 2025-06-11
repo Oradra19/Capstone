@@ -100,26 +100,30 @@ export default function DetailWisata() {
 
   return (
     <>
-      <div className="min-h-screen bg-[#F9FAFC] py-10 px-4 flex justify-center">
-        <div className="fixed top-8 left-10 z-50">
+      <div className="min-h-screen bg-[#F9FAFC] py-10 px-4">
+        <div className="absolute top-6 left-4 z-50">
           <img
             src="/assets/logo2.png"
             alt="logo"
-            className="h-20 drop-shadow-lg"
+            className="h-16 drop-shadow-lg"
           />
         </div>
 
-        <div className="w-full max-w-6xl bg-[#E9E9E9] border border-gray-300 shadow-lg rounded-xl p-6 space-y-6">
+        <div className="max-w-5xl w-full mx-auto bg-[#E9E9E9] border border-gray-300 shadow-lg rounded-xl p-4 sm:p-6 space-y-6 mt-20">
           <img
             src={wisata.gambar}
             alt={wisata.nama}
-            className="w-full h-64 object-cover rounded-xl shadow"
+            className="w-full h-60 sm:h-72 md:h-80 object-cover rounded-xl shadow"
           />
 
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-gray-800">{wisata.nama}</h1>
+          <div className="space-y-3">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+              {wisata.nama}
+            </h1>
             <p className="text-gray-600">📍 {wisata.lokasi}</p>
-            <p className="text-gray-700 leading-relaxed">{wisata.deskripsi}</p>
+            <p className="text-gray-700 leading-relaxed text-justify">
+              {wisata.deskripsi}
+            </p>
             <p className="text-lg font-semibold text-green-700">
               🎟️ Harga tiket: Rp {wisata.harga.toLocaleString("id-ID")}
             </p>
@@ -134,16 +138,16 @@ export default function DetailWisata() {
             </div>
           </div>
 
-          <div className="flex gap-4 flex-wrap">
+          <div className="flex flex-col sm:flex-row gap-4">
             <button
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
               onClick={() => navigate("/buat-plan", { state: { wisata } })}
             >
               Buat Plan
             </button>
 
             <button
-              className="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition"
+              className="w-full sm:w-auto px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition"
               onClick={() => tambahKeFavoriteFirestore(wisata)}
             >
               Tambah ke Favorite
@@ -155,7 +159,7 @@ export default function DetailWisata() {
               href={wisata.gmaps}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+              className="inline-block w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-600 transition"
             >
               Buka di Google Maps
             </a>

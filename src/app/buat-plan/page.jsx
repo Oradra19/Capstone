@@ -125,9 +125,9 @@ const BuatPlan = () => {
         <h1 className="text-center text-4xl font-bold mb-6">Buat Plan</h1>
 
         <Container maxWidth="md" sx={{ marginBottom: 4 }}>
-          <Paper elevation={3} sx={{ padding: 4, borderRadius: 3 }}>
+          <Paper elevation={3} sx={{ padding: { xs: 2, sm: 4 }, borderRadius: 3 }}>
             <Grid container spacing={3}>
-              <Grid item xs={12}>
+              <Grid item xs={12} lg={3}>
                 <TextField
                   label="Nama Rencana"
                   variant="outlined"
@@ -136,7 +136,7 @@ const BuatPlan = () => {
                   onChange={(e) => setPlanName(e.target.value)}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} lg={3}>
                 <TextField
                   label="Tanggal Perjalanan"
                   type="date"
@@ -213,7 +213,7 @@ const BuatPlan = () => {
                       }}
                     >
                       <Box
-                        sx={{ width: "100%", height: 160, overflow: "hidden" }}
+                        sx={{ width: "100%", height: { xs: 120, sm: 160 }, overflow: "hidden" }}
                       >
                         <img
                           src={w.gambar}

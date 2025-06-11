@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ProfileDropdown from "../../components/navbar/profiledropdown";
-import {
-  collection,
-  getDocs,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { useAuth } from "../../contexts/AuthContext";
 import { FiPlus, FiTrash2 } from "react-icons/fi"; // Tambahan ikon
@@ -60,11 +55,10 @@ const Plan = () => {
     <div className="flex flex-col min-h-screen bg-[#F9FAFC] font-montserrat">
       <ProfileDropdown />
 
-<h1 className="text-center text-4xl font-bold mt-4">Plan</h1>
+      <h1 className="text-center text-4xl font-bold mt-4">Plan</h1>
 
-      <div className="flex-grow px-8 py-6">
-        <div className="flex items-center justify-between mb-4">
-          
+      <div className="flex-grow px-4 sm:px-8 py-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
           <button
             onClick={() => navigate("/buat-plan")}
             className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition-all"
@@ -79,11 +73,11 @@ const Plan = () => {
             Belum ada plan yang disimpan.
           </p>
         ) : (
-          <div className="flex flex-wrap justify-start gap-4 mt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
             {plans.map((plan, index) => (
               <div
                 key={plan.id}
-                className="relative bg-white border border-gray-200 rounded-2xl shadow-md p-4 w-full sm:w-60 h-40 hover:shadow-xl hover:border-black-500 transition-all duration-300"
+                className="relative bg-white border border-gray-200 rounded-2xl shadow-md p-4 hover:shadow-xl hover:border-gray-400 transition-all duration-300"
               >
                 <Link to={`/plan/${plan.id}`}>
                   <p className="text-sm text-gray-600 mb-2">#{index + 1}</p>
