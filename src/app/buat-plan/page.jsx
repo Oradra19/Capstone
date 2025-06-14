@@ -18,7 +18,7 @@ import { addDoc, doc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useAuth } from "../../contexts/AuthContext"; // pastikan kamu punya context Auth
 import { useNavigate } from "react-router-dom";
-
+import { useLocation } from "react-router-dom";
 
 const BuatPlan = () => {
   const [planName, setPlanName] = useState("");
@@ -66,49 +66,58 @@ const BuatPlan = () => {
     // Jangan reset form supaya user bisa edit lagi kalau perlu
   };
 
+  const location = useLocation();
+
+  // Ambil data wisata dari navigasi (jika ada)
+  useEffect(() => {
+    if (location.state && location.state.wisata) {
+      const wisataDariDetail = location.state.wisata;
+      setSelectedWisata([wisataDariDetail]);
+    }
+  }, [location.state]);
+
   // Ubah handleSavePlans supaya hanya simpan planPreview ke Firebase
   const handleSavePlan = async () => {
-  if (!planPreview) {
-    alert("Tidak ada rencana untuk disimpan!");
-    return;
-  }
+    if (!planPreview) {
+      alert("Tidak ada rencana untuk disimpan!");
+      return;
+    }
 
-  const auth = getAuth();
-  const user = auth.currentUser;
+    const auth = getAuth();
+    const user = auth.currentUser;
 
-  if (!user) {
-    alert("Silakan login terlebih dahulu.");
+    if (!user) {
+      alert("Silakan login terlebih dahulu.");
       navigate("/login");
       return;
-  }
+    }
 
-  const uid = user.uid;
+    const uid = user.uid;
 
-  try {
-    const newPlan = {
-      name: planPreview.name,
-      date: planPreview.date,
-      destinations: planPreview.destinations,
-      createdAt: new Date(),
-    };
-    await addDoc(collection(db, "users", uid, "plans"), newPlan);
+    try {
+      const newPlan = {
+        name: planPreview.name,
+        date: planPreview.date,
+        destinations: planPreview.destinations,
+        createdAt: new Date(),
+      };
+      await addDoc(collection(db, "users", uid, "plans"), newPlan);
 
-    alert("Rencana berhasil disimpan!");
+      alert("Rencana berhasil disimpan!");
 
-    // Reset form dan preview
-    setPlanPreview(null);
-    setPlanName("");
-    setPlanDate("");
-    setSelectedWisata([]);
+      // Reset form dan preview
+      setPlanPreview(null);
+      setPlanName("");
+      setPlanDate("");
+      setSelectedWisata([]);
 
-    // Arahkan ke halaman /plan
-    navigate("/plan");
-  } catch (error) {
-    console.error("Gagal menyimpan rencana:", error);
-    alert("Terjadi kesalahan saat menyimpan.");
-  }
-};
-
+      // Arahkan ke halaman /plan
+      navigate("/plan");
+    } catch (error) {
+      console.error("Gagal menyimpan rencana:", error);
+      alert("Terjadi kesalahan saat menyimpan.");
+    }
+  };
 
   const formatDate = (isoDate) => {
     const dateObj = new Date(isoDate);
@@ -126,7 +135,10 @@ const BuatPlan = () => {
         <h1 className="text-center text-4xl font-bold mb-6">Buat Plan</h1>
 
         <Container maxWidth="md" sx={{ marginBottom: 4 }}>
-          <Paper elevation={3} sx={{ padding: { xs: 2, sm: 4 }, borderRadius: 3 }}>
+          <Paper
+            elevation={3}
+            sx={{ padding: { xs: 2, sm: 4 }, borderRadius: 3 }}
+          >
             <Grid container spacing={3}>
               <Grid item xs={12} lg={3}>
                 <TextField
@@ -214,7 +226,11 @@ const BuatPlan = () => {
                       }}
                     >
                       <Box
-                        sx={{ width: "100%", height: { xs: 120, sm: 160 }, overflow: "hidden" }}
+                        sx={{
+                          width: "100%",
+                          height: { xs: 120, sm: 160 },
+                          overflow: "hidden",
+                        }}
                       >
                         <img
                           src={w.gambar}
