@@ -78,7 +78,7 @@ const Login = () => {
         navigate("/");
       }
     } else {
-      setError("Data user tidak ditemukan di Firestore.");
+      setError("Data user tidak ditemukan.");
     }
   } catch (err) {
     console.error(err);

@@ -77,8 +77,9 @@ const BuatPlan = () => {
   const user = auth.currentUser;
 
   if (!user) {
-    alert("Anda harus login terlebih dahulu!");
-    return;
+    alert("Silakan login terlebih dahulu.");
+      navigate("/login");
+      return;
   }
 
   const uid = user.uid;
