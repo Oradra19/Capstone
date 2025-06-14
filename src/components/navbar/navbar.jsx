@@ -27,6 +27,15 @@ const Navbar = () => {
     return () => unsubscribe();
   }, []);
 
+  const handleOpenLogin = () => {
+    navigate("/login", { state: { backgroundLocation: location } });
+
+  };
+
+  const handleOpenRegister = () => {
+    navigate("/register", { state: { backgroundLocation: location } });
+
+  };
   const handleLogout = () => {
     auth.signOut();
     setDropdownOpen(false);
@@ -46,24 +55,22 @@ const Navbar = () => {
         <img src="/assets/logo.png" alt="logo" className="h-16 sm:h-20" />
 
         <div className="flex gap-2 items-center">
-          {!isLoggedIn ? (
-            <>
-              <Link
-                to="/login"
-                state={{ backgroundLocation: location }}
-                className="bg-white text-black px-4 py-2 text-sm rounded-full shadow font-semibold"
-              >
-                Log in
-              </Link>
-              <Link
-                to="/register"
-                state={{ backgroundLocation: location }}
-                className="bg-gray-300 px-4 py-2 text-sm rounded-full shadow font-semibold"
-              >
-                Sign up
-              </Link>
-            </>
-          ) : (
+           {!isLoggedIn ? (
+        <>
+          <button
+            onClick={handleOpenLogin}
+            className="bg-white text-black px-4 py-2 text-sm rounded-full shadow font-semibold"
+          >
+            Log in
+          </button>
+          <button
+            onClick={handleOpenRegister}
+            className="bg-gray-300 px-4 py-2 text-sm rounded-full shadow font-semibold"
+          >
+            Sign up
+          </button>
+        </>
+      ) : (
             <div className="relative">
               <button
                 className="flex items-center gap-2 px-4 py-2 rounded-full text-sm text-black"

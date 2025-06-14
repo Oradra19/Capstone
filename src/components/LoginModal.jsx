@@ -1,98 +1,98 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase/firebase"; // Pastikan path ini sesuai dengan struktur foldermu
+import {
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
+import { auth } from "../firebase/firebase";
 import { getDoc, doc, setDoc } from "firebase/firestore";
-import { db } from "../../firebase/firebase"; // pastikan db Firestore kamu sudah di-export
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-
-
+import { db } from "../firebase/firebase";
 
 const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const provider = new GoogleAuthProvider();
 
-  const backgroundLocation = location.state?.backgroundLocation || location;
+  const backgroundLocation = location.state?.backgroundLocation || "/";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleForgotPassword = () => {
-    const bgLocation = location.state?.backgroundLocation || location;
-    navigate("/forgot-password", { state: { backgroundLocation: bgLocation } });
+    navigate("/forgot-password", { state: { backgroundLocation } });
   };
 
   const handleClose = () => {
-    navigate(-1);
+    navigate(backgroundLocation); // bukan navigate(-1) agar lebih aman
   };
 
   const handleSignUp = () => {
-    const bgLocation = location.state?.backgroundLocation || location;
+    const bgLocation = location.state?.backgroundLocation || { pathname: "/" };
     navigate("/register", { state: { backgroundLocation: bgLocation } });
   };
 
   const handleGoogleLogin = async () => {
-  try {
-    const result = await signInWithPopup(auth, provider);
-    const user = result.user;
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
 
-    // Opsional: Simpan user baru ke Firestore jika belum ada
-    const docRef = doc(db, "users", user.uid);
-    const docSnap = await getDoc(docRef);
-    
-    if (!docSnap.exists()) {
-      await setDoc(docRef, {
-        email: user.email,
-        role: "user", // default role
-        name: user.displayName || "",
-        createdAt: new Date()
-      });
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        await setDoc(docRef, {
+          email: user.email,
+          role: "user",
+          name: user.displayName || "",
+          createdAt: new Date(),
+        });
+      }
+
+      navigate("/");
+    } catch (error) {
+      console.error("Google Login Error:", error);
+      setError("Gagal login dengan Google.");
     }
-
-    navigate("/"); // redirect setelah login sukses
-  } catch (error) {
-    console.error("Google Login Error:", error);
-    setError("Gagal login dengan Google.");
-  }
-};
+  };
 
   const handleLogin = async (e) => {
-  e.preventDefault();
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
+    e.preventDefault();
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
 
-    // Ambil data role dari Firestore
-    const docRef = doc(db, "users", user.uid);
-    const docSnap = await getDoc(docRef);
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const role = docSnap.data().role;
-      setError("");
-
-      if (role === "admin") {
-        navigate("/admin/data-wisata");
+      if (docSnap.exists()) {
+        const role = docSnap.data().role;
+        setError("");
+        if (role === "admin") {
+          navigate("/admin/data-wisata");
+        } else {
+          navigate("/");
+        }
       } else {
-        navigate("/");
+        setError("Data user tidak ditemukan.");
       }
-    } else {
-      setError("Data user tidak ditemukan.");
+    } catch (err) {
+      console.error(err);
+      setError("Email atau password salah!");
     }
-  } catch (err) {
-    console.error(err);
-    setError("Email atau password salah!");
-  }
-};
-
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl p-8 w-[400px] shadow-xl relative">
         <button
           onClick={handleClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl"
+          className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-2xl font-bold z-50"
         >
           &times;
         </button>
@@ -127,9 +127,7 @@ const Login = () => {
             />
           </div>
 
-          {error && (
-            <p className="text-red-500 text-sm text-center">{error}</p>
-          )}
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
           <button
             type="submit"
@@ -156,14 +154,13 @@ const Login = () => {
         </div>
 
         <div className="flex justify-center space-x-6">
-         <button onClick={handleGoogleLogin}>
-  <img
-    src="/assets/icons/google.png"
-    alt="Google"
-    className="w-8 h-8 cursor-pointer hover:scale-105 transition"
-  />
-</button>
-
+          <button onClick={handleGoogleLogin}>
+            <img
+              src="/assets/icons/google.png"
+              alt="Google"
+              className="w-8 h-8 cursor-pointer hover:scale-105 transition"
+            />
+          </button>
         </div>
       </div>
     </div>

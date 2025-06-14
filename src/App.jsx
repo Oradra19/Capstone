@@ -6,8 +6,6 @@ import {
   useLocation,
 } from "react-router-dom";
 import Home from "./app/halaman-utama/page";
-import Login from "./app/halaman-login/page";
-import Register from "./app/halaman-register/page";
 import PageDetailWisata from "./app/detail-wisata/page.jsx";
 import Favorite from "./app/halaman-favorit/page";
 import ForgotPassword from "./app/halaman-forgot-password/page";
@@ -22,6 +20,8 @@ import { getAnalytics } from "firebase/analytics";
 import FormWisata from "./components/formwisatainput.jsx";
 // import DataUserPage from "./app/admin/data-user/page.jsx";
 import DataWisataPage from "./app/admin/data-wisata/page.jsx";
+import Login from "./components/LoginModal.jsx"; // pastikan path sesuai
+import Register from "./components/RegisterModal.jsx"; // pastikan path sesuai
 
 // ✅ Tambahkan ini
 import { AuthProvider } from "./contexts/AuthContext"; // sesuaikan path
@@ -35,7 +35,6 @@ function AppRoutes() {
     <>
       <Routes location={backgroundLocation || location}>
         <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/detail/:id" element={<PageDetailWisata />} />
         <Route path="/favorite" element={<Favorite />} />
@@ -46,15 +45,14 @@ function AppRoutes() {
         <Route path="/search" element={<HasilSearch />} />
         <Route path="/formwisata" element={<FormWisata />} />
         <Route path="/kategori/:nama" element={<KategoriTempat />} />
-        {/* <Route path="/admin/data-user" element={<DataUserPage />} /> */}
         <Route path="/admin/data-wisata" element={<DataWisataPage />} />
       </Routes>
 
+      {/* Modal login dan register ditampilkan sebagai overlay */}
       {backgroundLocation && (
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
       )}
     </>
@@ -78,7 +76,9 @@ function App() {
   }, []);
 
   return (
-    <AuthProvider> {/* ✅ Bungkus semua dengan AuthProvider */}
+    <AuthProvider>
+      {" "}
+      {/* ✅ Bungkus semua dengan AuthProvider */}
       <Router>
         <AppRoutes />
       </Router>

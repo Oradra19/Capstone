@@ -1,52 +1,57 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../../firebase/firebase";
+import { auth } from "../firebase/firebase";
 import { setDoc, doc } from "firebase/firestore";
-import { db } from "../../firebase/firebase";
+import { db } from "../firebase/firebase";
 
 const Register = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const backgroundLocation = location.state?.backgroundLocation || "/";
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const handleClose = () => {
-    navigate(-1);
+    navigate(backgroundLocation); // bukan navigate(-1) agar lebih aman
   };
 
   const handleSignUp = async (e) => {
-  e.preventDefault();
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
+    e.preventDefault();
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
 
-    // Update profile Firebase Authentication
-    await updateProfile(user, {
-      displayName: username,
-    });
+      // Update profile Firebase Authentication
+      await updateProfile(user, {
+        displayName: username,
+      });
 
-    // Simpan data user ke Firestore
-    await setDoc(doc(db, "users", user.uid), {
-      email: user.email,
-      role: "user", // default role
-      name: username,
-      createdAt: new Date()
-    });
+      // Simpan data user ke Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        role: "user", // default role
+        name: username,
+        createdAt: new Date(),
+      });
 
-    setMessage("Sign up berhasil!");
-    navigate("/"); // redirect setelah berhasil daftar
-  } catch (error) {
-    console.error(error);
-    setMessage(`Error: ${error.message}`);
-  }
-};
-
+      setMessage("Sign up berhasil!");
+      navigate("/"); // redirect setelah berhasil daftar
+    } catch (error) {
+      console.error(error);
+      setMessage(`Error: ${error.message}`);
+    }
+  };
 
   const handleLogin = () => {
-    navigate("/", { state: { backgroundLocation: location } });
+    const bgLocation = location.state?.backgroundLocation || { pathname: "/" };
+    navigate("/login", { state: { backgroundLocation: bgLocation } });
   };
 
   return (
@@ -59,7 +64,9 @@ const Register = () => {
           &times;
         </button>
 
-        <h2 className="text-center text-lg font-semibold mb-4">Create An Account</h2>
+        <h2 className="text-center text-lg font-semibold mb-4">
+          Create An Account
+        </h2>
 
         <h3 className="text-center text-xs mb-4">
           Already have an account?{" "}
@@ -105,7 +112,9 @@ const Register = () => {
             Sign Up
           </button>
 
-          {message && <p className="text-center text-sm text-red-500 mt-2">{message}</p>}
+          {message && (
+            <p className="text-center text-sm text-red-500 mt-2">{message}</p>
+          )}
         </form>
       </div>
     </div>

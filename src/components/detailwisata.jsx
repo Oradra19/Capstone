@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { doc, getDocs, getDoc } from "firebase/firestore";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase/firebase";
@@ -8,6 +8,7 @@ import { useAuth } from "../contexts/AuthContext"; // pastikan kamu punya contex
 export default function DetailWisata() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth(); // gunakan context untuk cek login
   const [wisata, setWisata] = useState(null);
 
@@ -33,7 +34,7 @@ export default function DetailWisata() {
   const tambahKeFavoriteFirestore = async (destinasi) => {
     if (!user) {
       alert("Silakan login terlebih dahulu.");
-      navigate("/login");
+      navigate("/login", { state: { backgroundLocation: location } });
       return;
     }
 
