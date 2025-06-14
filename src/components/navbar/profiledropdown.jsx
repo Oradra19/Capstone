@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { auth } from "../../firebase/firebase"; // Pastikan path sesuai
+import { auth } from "../../firebase/firebase"; 
 
 const ProfileDropdown = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -11,7 +11,6 @@ const ProfileDropdown = () => {
     const loggedInStatus = localStorage.getItem("isLoggedIn") === "true";
     setIsLoggedIn(loggedInStatus);
 
-    // Ambil nama user dari Firebase auth jika user sudah login
     const currentUser = auth.currentUser;
     if (loggedInStatus && currentUser) {
       setUsername(currentUser.displayName || "User");

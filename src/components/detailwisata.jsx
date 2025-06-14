@@ -3,13 +3,13 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { doc, getDocs, getDoc } from "firebase/firestore";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase/firebase";
-import { useAuth } from "../contexts/AuthContext"; // pastikan kamu punya context Auth
+import { useAuth } from "../contexts/AuthContext"; 
 
 export default function DetailWisata() {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAuth(); // gunakan context untuk cek login
+  const { user } = useAuth(); 
   const [wisata, setWisata] = useState(null);
 
   useEffect(() => {
@@ -41,10 +41,8 @@ export default function DetailWisata() {
     try {
       const favRef = collection(db, "users", user.uid, "favorites");
 
-      // Ambil semua dokumen favorites untuk user ini
       const snapshot = await getDocs(favRef);
 
-      // Cek apakah ada dokumen yang punya wisataId sama dengan destinasi.id
       const alreadyFavorited = snapshot.docs.some(
         (doc) => doc.data().wisataId === destinasi.id
       );
@@ -54,7 +52,6 @@ export default function DetailWisata() {
         return;
       }
 
-      // Jika belum ada, tambahkan ke favorites
       await addDoc(favRef, {
         nama: destinasi.nama,
         lokasi: destinasi.lokasi,

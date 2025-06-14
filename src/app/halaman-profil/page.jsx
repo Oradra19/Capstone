@@ -6,7 +6,7 @@ import { app } from "../../firebase/firebase";
 const Profile = () => {
   const [showModal, setShowModal] = useState(false);
   const [showImageOptions, setShowImageOptions] = useState(false);
-  const [showPasswordModal, setShowPasswordModal] = useState(false); // modal baru
+  const [showPasswordModal, setShowPasswordModal] = useState(false); 
   const [newPassword, setNewPassword] = useState("");
 
   const [profileImage, setProfileImage] = useState("/assets/icons/default.jpg");
@@ -19,7 +19,7 @@ const Profile = () => {
     tanggalLahir: "",
     jenisKelamin: "",
     alamat: "",
-    profileImageUrl: "", // simpan URL foto profil dari db
+    profileImageUrl: "",
   });
 
   const [formData, setFormData] = useState(profile);
@@ -36,7 +36,6 @@ const Profile = () => {
         const docSnap = await getDoc(docRef);
         const userData = docSnap.exists() ? docSnap.data() : {};
 
-        // 🔽 GANTI DENGAN INI
         const profileImageUrl =
           userData.profileImageUrl || "/assets/icons/default.jpg";
 
@@ -79,7 +78,7 @@ const Profile = () => {
   };
 
   const uploadToCloudinary = async (gambar) => {
-    if (!gambar) return null; // kalau gambar null, artinya tidak ada upload baru
+    if (!gambar) return null; 
 
     const formData = new FormData();
     formData.append("file", gambar);
@@ -98,7 +97,7 @@ const Profile = () => {
       console.error("Upload ke Cloudinary gagal:", data);
       throw new Error("Upload ke Cloudinary gagal");
     }
-    return data; // kembalikan seluruh data agar bisa pakai public_id juga
+    return data; 
   };
 
   const handleImageChange = async (e) => {
@@ -106,7 +105,7 @@ const Profile = () => {
     if (!file || !currentUser) return;
 
     try {
-      const uploadResult = await uploadToCloudinary(file); // kirim file ke uploadToCloudinary
+      const uploadResult = await uploadToCloudinary(file); 
       if (!uploadResult) {
         alert("Gagal mengunggah gambar ke Cloudinary.");
         return;
@@ -115,7 +114,7 @@ const Profile = () => {
       await setDoc(
         doc(db, "users", currentUser.uid),
         {
-          profileImageUrl: uploadResult.secure_url, // pakai secure_url bukan uploadResult.url
+          profileImageUrl: uploadResult.secure_url, 
           cloudinaryPublicId: uploadResult.public_id,
         },
         { merge: true }
@@ -138,10 +137,8 @@ const Profile = () => {
     if (!currentUser) return;
 
     try {
-      // Ganti foto ke default lokal
       const defaultImage = "/assets/icons/default.jpg";
 
-      // Update Firestore: kosongkan URL Cloudinary dan public_id
       await setDoc(
         doc(db, "users", currentUser.uid),
         {
@@ -151,7 +148,6 @@ const Profile = () => {
         { merge: true }
       );
 
-      // Update state
       setProfileImage(defaultImage);
       setProfile((prev) => ({
         ...prev,
@@ -166,7 +162,6 @@ const Profile = () => {
     }
   };
 
-  // Fungsi untuk ubah password di modal baru
   const handleChangePassword = async () => {
     if (!currentUser) return;
     if (newPassword.length < 6) {
@@ -271,7 +266,7 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Layout tombol edit dan ubah password */}
+          {/* Tombol edit dan ubah password */}
           <div className="mt-6 flex justify-between items-center gap-4">
             <button
               onClick={openModal}

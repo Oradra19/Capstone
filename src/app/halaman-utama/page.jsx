@@ -47,12 +47,14 @@ const HalamanUtama = ({ user }) => {
 
   return (
     <div className="min-h-screen bg-[#F9FAFC]">
-      <Navbar
-        user={user}
-        searchKeyword={searchKeyword}
-        setSearchKeyword={setSearchKeyword}
-      />
-      <div className="mt-4">
+      <nav className="sticky top-0 z-50 bg-transparent">
+        <Navbar
+          user={user}
+          searchKeyword={searchKeyword}
+          setSearchKeyword={setSearchKeyword}
+        />
+      </nav>
+      <div className="mt-4 pt-8">
         <Kategori />
         <BannerPromo />
         <WisataList destinasi={destinasi} searchKeyword={searchKeyword} />

@@ -20,7 +20,6 @@ const FormTambahDestinasi = ({ editData, onSuccess }) => {
   const [gambar, setGambar] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Isi form dengan data edit saat pertama kali menerima editData
   useEffect(() => {
     if (editData) {
       setForm({
@@ -31,9 +30,8 @@ const FormTambahDestinasi = ({ editData, onSuccess }) => {
         rating: editData.rating || "",
         gmaps: editData.gmaps || "",
       });
-      setGambar(null); // reset gambar baru, user harus upload ulang jika ingin ganti
+      setGambar(null); 
     } else {
-      // kalau tambah data baru, reset form
       setForm({
         nama: "",
         lokasi: "",
@@ -55,7 +53,7 @@ const FormTambahDestinasi = ({ editData, onSuccess }) => {
   };
 
   const uploadImageToCloudinary = async () => {
-    if (!gambar) return null; // kalau gambar null, artinya tidak ada upload baru
+    if (!gambar) return null; 
 
     const formData = new FormData();
     formData.append("file", gambar);
@@ -80,15 +78,12 @@ const FormTambahDestinasi = ({ editData, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Jika tambah, gambar wajib diupload
     if (!editData && !gambar) {
       return alert("Silakan upload gambar!");
     }
 
     try {
       setLoading(true);
-
-      // Upload gambar hanya jika ada gambar baru (gambar != null)
       const imageUrl = gambar ? await uploadImageToCloudinary() : editData?.gambar;
 
       if (editData) {
@@ -101,7 +96,6 @@ const FormTambahDestinasi = ({ editData, onSuccess }) => {
         });
         alert("Destinasi berhasil diperbarui!");
       } else {
-        // tambah data baru
         await addDoc(collection(db, "wisata"), {
           ...form,
           gambar: imageUrl,
@@ -110,7 +104,6 @@ const FormTambahDestinasi = ({ editData, onSuccess }) => {
         alert("Destinasi berhasil ditambahkan!");
       }
 
-      // reset form & notify parent
       setForm({
         nama: "",
         lokasi: "",

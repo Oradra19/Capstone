@@ -28,13 +28,13 @@ const DashboardDestinasi = () => {
         ...doc.data(),
       }));
       setData(wisataData);
-      setFilteredData(wisataData); // default tampilan semua
+      setFilteredData(wisataData); 
     });
 
     return () => unsubscribe();
   }, []);
 
-  // Filter berdasarkan nama
+
   useEffect(() => {
     if (searchTerm === "") {
       setFilteredData(data);
@@ -81,7 +81,7 @@ const DashboardDestinasi = () => {
             <button
               onClick={() => {
                 setModalOpen(true);
-                setEditItem(null); // tambah data
+                setEditItem(null); 
               }}
               className="bg-green-500 text-white px-4 py-2 rounded font-semibold"
             >

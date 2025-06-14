@@ -15,11 +15,38 @@ const Register = () => {
   const [message, setMessage] = useState("");
 
   const handleClose = () => {
-    navigate(backgroundLocation); // bukan navigate(-1) agar lebih aman
+    navigate(backgroundLocation);
   };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+
+    if (!username.trim()) {
+      setMessage("Username harus diisi.");
+      return;
+    }
+
+    if (!email.trim()) {
+      setMessage("Email harus diisi.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setMessage("Format email tidak valid.");
+      return;
+    }
+
+    if (!password) {
+      setMessage("Password harus diisi.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setMessage("Password harus minimal 6 karakter.");
+      return;
+    }
+
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -28,21 +55,19 @@ const Register = () => {
       );
       const user = userCredential.user;
 
-      // Update profile Firebase Authentication
       await updateProfile(user, {
         displayName: username,
       });
 
-      // Simpan data user ke Firestore
       await setDoc(doc(db, "users", user.uid), {
         email: user.email,
-        role: "user", // default role
+        role: "user",
         name: username,
         createdAt: new Date(),
       });
 
       setMessage("Sign up berhasil!");
-      navigate("/"); // redirect setelah berhasil daftar
+      navigate("/");
     } catch (error) {
       console.error(error);
       setMessage(`Error: ${error.message}`);

@@ -1,10 +1,24 @@
+import { useState } from "react";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../../firebase/firebase"; 
 import { useNavigate, useLocation } from "react-router-dom";
 
-const ForgotPassword = () => {
+const ForgotPassword = ({ onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
-  console.log("Location state di forgot-password:", location.state);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setMessage("Link reset password telah dikirim ke email Anda.");
+    } catch (error) {
+      console.error("Gagal mengirim email:", error);
+      setMessage("Gagal mengirim email. Coba lagi.");
+    }
+  };
 
   const handleClose = () => {
     if (location.state?.backgroundLocation) {
@@ -24,24 +38,30 @@ const ForgotPassword = () => {
           &times;
         </button>
         <h2 className="text-center text-lg font-semibold mb-4">
-          Forgot Password
+          Reset Password
         </h2>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label className="block font-semibold text-sm mb-1">Email</label>
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your email"
+              placeholder="Masukkan email Anda"
+              required
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-gray-400 hover:bg-gray-500 text-black font-semibold py-2 rounded-md"
+            className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 rounded-md"
           >
-            Reset Password
+            Kirim Link Reset
           </button>
         </form>
+        {message && (
+          <p className="text-center text-sm text-green-600 mt-4">{message}</p>
+        )}
       </div>
     </div>
   );

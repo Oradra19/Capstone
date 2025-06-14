@@ -19,11 +19,11 @@ import { getAnalytics } from "firebase/analytics";
 import FormWisata from "./components/formwisatainput.jsx";
 // import DataUserPage from "./app/admin/data-user/page.jsx";
 import DataWisataPage from "./app/admin/data-wisata/page.jsx";
-import Login from "./components/LoginModal.jsx"; // pastikan path sesuai
-import Register from "./components/RegisterModal.jsx"; // pastikan path sesuai
+import Login from "./components/LoginModal.jsx"; 
+import Register from "./components/RegisterModal.jsx"; 
 
 // ✅ Tambahkan ini
-import { AuthProvider } from "./contexts/AuthContext"; // sesuaikan path
+import { AuthProvider } from "./contexts/AuthContext"; 
 
 function AppRoutes() {
   const location = useLocation();
@@ -34,7 +34,6 @@ function AppRoutes() {
     <>
       <Routes location={backgroundLocation || location}>
         <Route path="/" element={<Home />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/detail/:id" element={<PageDetailWisata />} />
         <Route path="/favorite" element={<Favorite />} />
         <Route path="/profil" element={<Profile />} />
@@ -46,11 +45,11 @@ function AppRoutes() {
         <Route path="/admin/data-wisata" element={<DataWisataPage />} />
       </Routes>
 
-      {/* Modal login dan register ditampilkan sebagai overlay */}
       {backgroundLocation && (
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
       )}
     </>
@@ -60,13 +59,13 @@ function AppRoutes() {
 function App() {
   useEffect(() => {
     const firebaseConfig = {
-      apiKey: "AIzaSyA7A7-hASzNuBwdubBMUq8ScwLYtbeqK08",
-      authDomain: "destinasiku-b882d.firebaseapp.com",
-      projectId: "destinasiku-b882d",
-      storageBucket: "destinasiku-b882d.firebasestorage.app",
-      messagingSenderId: "857884833492",
-      appId: "1:857884833492:web:6d749eab8e126b9473ed41",
-      measurementId: "G-01J0MLR78B",
+      apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+      appId: import.meta.env.VITE_FIREBASE_APP_ID,
+      measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
     };
 
     const app = initializeApp(firebaseConfig);
@@ -76,7 +75,6 @@ function App() {
   return (
     <AuthProvider>
       {" "}
-      {/* ✅ Bungkus semua dengan AuthProvider */}
       <Router>
         <AppRoutes />
       </Router>

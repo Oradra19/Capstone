@@ -20,12 +20,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleForgotPassword = () => {
-    navigate("/forgot-password", { state: { backgroundLocation } });
-  };
-
   const handleClose = () => {
-    navigate(backgroundLocation); // bukan navigate(-1) agar lebih aman
+    navigate(backgroundLocation); 
   };
 
   const handleSignUp = () => {
@@ -139,10 +135,14 @@ const Login = () => {
           <div className="text-center">
             <button
               type="button"
-              onClick={handleForgotPassword}
-              className="text-blue-600 underline text-sm"
+              className="text-sm text-blue-600 mt-2 hover:underline"
+              onClick={() => {
+                navigate("/forgot-password", {
+                  state: { backgroundLocation },
+                });
+              }}
             >
-              Forgot Password
+              Lupa Password?
             </button>
           </div>
         </form>

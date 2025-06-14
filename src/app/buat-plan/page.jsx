@@ -16,7 +16,7 @@ import { db } from "../../firebase/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { addDoc, doc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { useAuth } from "../../contexts/AuthContext"; // pastikan kamu punya context Auth
+import { useAuth } from "../../contexts/AuthContext"; 
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
@@ -26,11 +26,11 @@ const BuatPlan = () => {
   const [planDate, setPlanDate] = useState("");
   const [selectedWisata, setSelectedWisata] = useState([]);
   const [planPreview, setPlanPreview] = useState(null);
-  const { user } = useAuth(); // gunakan context untuk cek login
+  const today = new Date().toISOString().split("T")[0];
+  const { user } = useAuth(); 
   const [plans, setPlans] = useState([]);
   const [wisataList, setWisataList] = useState([]);
 
-  // Ambil data wisata dari Firebase
   useEffect(() => {
     const fetchDataWisata = async () => {
       try {
@@ -49,12 +49,18 @@ const BuatPlan = () => {
   }, []);
 
   const handleCreatePlan = () => {
+    const today = new Date().toISOString().split("T")[0]; 
+
     if (!planName || !planDate || selectedWisata.length === 0) {
       alert("Lengkapi semua data terlebih dahulu!");
       return;
     }
 
-    // Simpan data plan sementara ke state untuk preview
+    if (planDate < today) {
+      alert("Tanggal perjalanan tidak boleh sebelum hari ini!");
+      return;
+    }
+
     const newPlan = {
       name: planName,
       date: planDate,
@@ -62,13 +68,10 @@ const BuatPlan = () => {
     };
 
     setPlanPreview(newPlan);
-
-    // Jangan reset form supaya user bisa edit lagi kalau perlu
   };
 
   const location = useLocation();
 
-  // Ambil data wisata dari navigasi (jika ada)
   useEffect(() => {
     if (location.state && location.state.wisata) {
       const wisataDariDetail = location.state.wisata;
@@ -76,7 +79,6 @@ const BuatPlan = () => {
     }
   }, [location.state]);
 
-  // Ubah handleSavePlans supaya hanya simpan planPreview ke Firebase
   const handleSavePlan = async () => {
     if (!planPreview) {
       alert("Tidak ada rencana untuk disimpan!");
@@ -105,13 +107,11 @@ const BuatPlan = () => {
 
       alert("Rencana berhasil disimpan!");
 
-      // Reset form dan preview
       setPlanPreview(null);
       setPlanName("");
       setPlanDate("");
       setSelectedWisata([]);
 
-      // Arahkan ke halaman /plan
       navigate("/plan");
     } catch (error) {
       console.error("Gagal menyimpan rencana:", error);
@@ -158,12 +158,13 @@ const BuatPlan = () => {
                   value={planDate}
                   onChange={(e) => setPlanDate(e.target.value)}
                   InputLabelProps={{ shrink: true }}
+                  InputProps={{ inputProps: { min: today } }} 
                 />
               </Grid>
               <Grid item xs={12}>
                 <Autocomplete
                   multiple
-                  options={wisataList} // ← gunakan data dari Firebase
+                  options={wisataList} 
                   getOptionLabel={(option) => option.nama}
                   value={selectedWisata}
                   onChange={(event, newValue) => setSelectedWisata(newValue)}

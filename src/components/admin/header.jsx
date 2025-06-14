@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../firebase/firebase"; // pastikan path db sesuai
+import { db } from "../../firebase/firebase"; 
 
 const Header = ({ title }) => {
   const [adminName, setAdminName] = useState("");

@@ -11,7 +11,6 @@ const Favorite = () => {
   const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
 
-  // Fungsi ambil data favorit dari Firestore
   const fetchFavorites = async (uid) => {
     const favoritesRef = collection(db, "users", uid, "favorites");
     const snapshot = await getDocs(favoritesRef);
@@ -42,13 +41,11 @@ const Favorite = () => {
     navigate(`/detail/${id}`);
   };
 
-  // Fungsi hapus favorit
   const handleDelete = async (favId) => {
     if (!userId) return;
 
     try {
       await deleteDoc(doc(db, "users", userId, "favorites", favId));
-      // Setelah hapus, refresh list favorit
       fetchFavorites(userId);
       alert("Destinasi favorit berhasil dihapus.");
     } catch (error) {
@@ -79,7 +76,7 @@ const Favorite = () => {
                   src={item.gambar}
                   alt={item.nama}
                   className="w-24 h-20 object-cover rounded-md cursor-pointer"
-                  onClick={() => handleClick(item.wisataId || item.id)} // pake wisataId biar arah ke detail
+                  onClick={() => handleClick(item.wisataId || item.id)} 
                 />
                 <div
                   className="flex-1 cursor-pointer"

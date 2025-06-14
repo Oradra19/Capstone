@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 const ModalForm = ({ isOpen, onClose, initialData, onSubmit }) => {
-  // State form
   const [formData, setFormData] = useState({
     foto: "",
     rating: "",
@@ -14,7 +13,6 @@ const ModalForm = ({ isOpen, onClose, initialData, onSubmit }) => {
 
   const [previewImage, setPreviewImage] = useState("");
 
-  // Isi form saat edit, atau kosongkan saat tambah
   useEffect(() => {
     if (initialData) {
       setFormData({
@@ -43,11 +41,9 @@ const ModalForm = ({ isOpen, onClose, initialData, onSubmit }) => {
 
   if (!isOpen) return null;
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Jika rating atau harga, batasi input hanya angka dan titik
     if ((name === "rating" || name === "harga") && value !== "") {
       if (!/^\d*\.?\d*$/.test(value)) return;
     }
@@ -55,12 +51,10 @@ const ModalForm = ({ isOpen, onClose, initialData, onSubmit }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle file upload foto
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Untuk preview gambar
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreviewImage(reader.result);
@@ -69,11 +63,9 @@ const ModalForm = ({ isOpen, onClose, initialData, onSubmit }) => {
     reader.readAsDataURL(file);
   };
 
-  // Handle submit form
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validasi sederhana
     if (!formData.nama.trim()) {
       alert("Nama wisata harus diisi!");
       return;
@@ -83,10 +75,8 @@ const ModalForm = ({ isOpen, onClose, initialData, onSubmit }) => {
       return;
     }
 
-    // Kirim data ke parent
     onSubmit(formData);
 
-    // Reset dan tutup modal
     setFormData({
       foto: "",
       rating: "",
@@ -108,7 +98,6 @@ const ModalForm = ({ isOpen, onClose, initialData, onSubmit }) => {
         </h2>
 
         <form onSubmit={handleSubmit}>
-          {/* Upload Foto */}
           <label className="block mb-2 font-semibold">Foto</label>
           {previewImage && (
             <img
@@ -123,8 +112,6 @@ const ModalForm = ({ isOpen, onClose, initialData, onSubmit }) => {
             onChange={handleFileChange}
             className="mb-4"
           />
-
-          {/* Rating */}
           <label className="block mb-2 font-semibold">Rating (0-5)</label>
           <input
             type="text"
@@ -135,8 +122,6 @@ const ModalForm = ({ isOpen, onClose, initialData, onSubmit }) => {
             className="w-full p-2 border mb-4 rounded"
             maxLength={3}
           />
-
-          {/* Nama */}
           <label className="block mb-2 font-semibold">Nama Wisata</label>
           <input
             type="text"
@@ -146,8 +131,6 @@ const ModalForm = ({ isOpen, onClose, initialData, onSubmit }) => {
             placeholder="Nama destinasi wisata"
             className="w-full p-2 border mb-4 rounded"
           />
-
-          {/* Deskripsi */}
           <label className="block mb-2 font-semibold">Deskripsi</label>
           <textarea
             name="deskripsi"
@@ -157,8 +140,6 @@ const ModalForm = ({ isOpen, onClose, initialData, onSubmit }) => {
             className="w-full p-2 border mb-4 rounded"
             rows={3}
           />
-
-          {/* Harga */}
           <label className="block mb-2 font-semibold">Harga (angka)</label>
           <input
             type="text"
@@ -168,8 +149,6 @@ const ModalForm = ({ isOpen, onClose, initialData, onSubmit }) => {
             placeholder="Harga tiket masuk"
             className="w-full p-2 border mb-4 rounded"
           />
-
-          {/* Gmaps */}
           <label className="block mb-2 font-semibold">Link Gmaps</label>
           <input
             type="url"
@@ -179,8 +158,6 @@ const ModalForm = ({ isOpen, onClose, initialData, onSubmit }) => {
             placeholder="https://maps.google.com/..."
             className="w-full p-2 border mb-4 rounded"
           />
-
-          {/* Lokasi */}
           <label className="block mb-2 font-semibold">Lokasi</label>
           <input
             type="text"
@@ -190,7 +167,6 @@ const ModalForm = ({ isOpen, onClose, initialData, onSubmit }) => {
             placeholder="Contoh: Karanganyar"
             className="w-full p-2 border mb-6 rounded"
           />
-
           <div className="flex justify-end gap-3">
             <button
               type="button"

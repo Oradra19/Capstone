@@ -4,7 +4,7 @@ import ProfileDropdown from "../../components/navbar/profiledropdown";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { useAuth } from "../../contexts/AuthContext";
-import { FiPlus, FiTrash2 } from "react-icons/fi"; // Tambahan ikon
+import { FiPlus, FiTrash2 } from "react-icons/fi"; 
 
 const Plan = () => {
   const [plans, setPlans] = useState([]);

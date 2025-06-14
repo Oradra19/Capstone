@@ -33,8 +33,6 @@ const Sidebar = () => {
           </ul>
         </nav>
       </div>
-
-      {/* Tombol Logout */}
       <div className="mt-6">
         <button
           onClick={handleLogout}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../firebase/firebase"; // sesuaikan dengan path file firebase.js
+import { auth } from "../../firebase/firebase"; 
 
 const Navbar = ({ user, searchKeyword, setSearchKeyword }) => {
   const location = useLocation();
