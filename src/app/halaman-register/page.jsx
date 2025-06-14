@@ -2,6 +2,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
+import { setDoc, doc } from "firebase/firestore";
+import { db } from "../../firebase/firebase";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -19,11 +21,23 @@ const Register = () => {
   e.preventDefault();
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    await updateProfile(userCredential.user, {
+    const user = userCredential.user;
+
+    // Update profile Firebase Authentication
+    await updateProfile(user, {
       displayName: username,
     });
+
+    // Simpan data user ke Firestore
+    await setDoc(doc(db, "users", user.uid), {
+      email: user.email,
+      role: "user", // default role
+      name: username,
+      createdAt: new Date()
+    });
+
     setMessage("Sign up berhasil!");
-    navigate("/"); // ⬅️ redirect ke login setelah berhasil
+    navigate("/"); // redirect setelah berhasil daftar
   } catch (error) {
     console.error(error);
     setMessage(`Error: ${error.message}`);
