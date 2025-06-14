@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export default function WisataList({ destinasi }) {
+export default function WisataList({ destinasi, searchKeyword }) {
   const navigate = useNavigate();
 
   const handleClick = (id) => {
@@ -10,10 +10,13 @@ export default function WisataList({ destinasi }) {
   if (!destinasi || destinasi.length === 0) {
     return <p className="text-center mt-6">Belum ada destinasi tersedia.</p>;
   }
+  const filteredDestinasi = destinasi.filter((item) =>
+    item.nama.toLowerCase().includes(searchKeyword.toLowerCase())
+  );
 
   return (
     <div className="mt-4 px-4 space-y-6 mx-auto max-w-[1450px]">
-      {destinasi.map((item) => (
+      {filteredDestinasi.map((item) => (
         <div
           key={item.id}
           onClick={() => handleClick(item.id)}
@@ -26,8 +29,12 @@ export default function WisataList({ destinasi }) {
           />
           <div className="flex-1">
             <h2 className="text-lg md:text-xl font-bold">{item.nama}</h2>
-            <p className="text-sm text-gray-700 line-clamp-3">{item.deskripsi}</p>
-            <p className="text-sm font-semibold mt-2 text-green-700">Rp{item.harga}</p>
+            <p className="text-sm text-gray-700 line-clamp-3">
+              {item.deskripsi}
+            </p>
+            <p className="text-sm font-semibold mt-2 text-green-700">
+              Rp{item.harga}
+            </p>
           </div>
         </div>
       ))}

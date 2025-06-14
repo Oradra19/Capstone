@@ -13,7 +13,6 @@ import Profile from "./app/halaman-profil/page.jsx";
 import Plan from "./app/halaman-plan/page.jsx";
 import PlanDetail from "./app/plan-detail/page.jsx";
 import BuatPlan from "./app/buat-plan/page.jsx";
-import HasilSearch from "./app/halaman-search/page.jsx";
 import KategoriTempat from "./app/kategori-tempat/page.jsx";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -42,7 +41,6 @@ function AppRoutes() {
         <Route path="/plan" element={<Plan />} />
         <Route path="/plan/:id" element={<PlanDetail />} />
         <Route path="/buat-plan" element={<BuatPlan />} />
-        <Route path="/search" element={<HasilSearch />} />
         <Route path="/formwisata" element={<FormWisata />} />
         <Route path="/kategori/:nama" element={<KategoriTempat />} />
         <Route path="/admin/data-wisata" element={<DataWisataPage />} />

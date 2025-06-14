@@ -3,13 +3,12 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebase/firebase"; // sesuaikan dengan path file firebase.js
 
-const Navbar = () => {
+const Navbar = ({ user, searchKeyword, setSearchKeyword }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [searchKeyword, setSearchKeyword] = useState("");
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
@@ -29,12 +28,10 @@ const Navbar = () => {
 
   const handleOpenLogin = () => {
     navigate("/login", { state: { backgroundLocation: location } });
-
   };
 
   const handleOpenRegister = () => {
     navigate("/register", { state: { backgroundLocation: location } });
-
   };
   const handleLogout = () => {
     auth.signOut();
@@ -55,22 +52,22 @@ const Navbar = () => {
         <img src="/assets/logo.png" alt="logo" className="h-16 sm:h-20" />
 
         <div className="flex gap-2 items-center">
-           {!isLoggedIn ? (
-        <>
-          <button
-            onClick={handleOpenLogin}
-            className="bg-white text-black px-4 py-2 text-sm rounded-full shadow font-semibold"
-          >
-            Log in
-          </button>
-          <button
-            onClick={handleOpenRegister}
-            className="bg-gray-300 px-4 py-2 text-sm rounded-full shadow font-semibold"
-          >
-            Sign up
-          </button>
-        </>
-      ) : (
+          {!isLoggedIn ? (
+            <>
+              <button
+                onClick={handleOpenLogin}
+                className="bg-white text-black px-4 py-2 text-sm rounded-full shadow font-semibold"
+              >
+                Log in
+              </button>
+              <button
+                onClick={handleOpenRegister}
+                className="bg-gray-300 px-4 py-2 text-sm rounded-full shadow font-semibold"
+              >
+                Sign up
+              </button>
+            </>
+          ) : (
             <div className="relative">
               <button
                 className="flex items-center gap-2 px-4 py-2 rounded-full text-sm text-black"

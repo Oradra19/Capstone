@@ -14,6 +14,7 @@ const HalamanUtama = ({ user }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState("");
   const [showRegisterModal, setShowRegisterModal] = useState(false);
 
   useEffect(() => {
@@ -46,11 +47,15 @@ const HalamanUtama = ({ user }) => {
 
   return (
     <div className="min-h-screen bg-[#F9FAFC]">
-      <Navbar user={user} />
+      <Navbar
+        user={user}
+        searchKeyword={searchKeyword}
+        setSearchKeyword={setSearchKeyword}
+      />
       <div className="mt-4">
         <Kategori />
         <BannerPromo />
-        <WisataList destinasi={destinasi} />
+        <WisataList destinasi={destinasi} searchKeyword={searchKeyword} />
       </div>
 
       {showLoginModal && (
