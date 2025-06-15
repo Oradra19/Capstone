@@ -10,9 +10,18 @@ export default function WisataList({ destinasi, searchKeyword }) {
   if (!destinasi || destinasi.length === 0) {
     return <p className="text-center mt-6">Belum ada destinasi tersedia.</p>;
   }
+
   const filteredDestinasi = destinasi.filter((item) =>
     item.nama.toLowerCase().includes(searchKeyword.toLowerCase())
   );
+
+  if (filteredDestinasi.length === 0) {
+    return (
+      <p className="text-center text-gray-500 mt-6">
+        Destinasi tidak ditemukan.
+      </p>
+    );
+  }
 
   return (
     <div className="mt-4 px-4 space-y-6 mx-auto max-w-[1450px]">

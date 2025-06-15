@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../firebase/firebase"; 
+import { auth } from "../../firebase/firebase";
 
 const Navbar = ({ user, searchKeyword, setSearchKeyword }) => {
   const location = useLocation();
@@ -113,22 +113,20 @@ const Navbar = ({ user, searchKeyword, setSearchKeyword }) => {
           )}
         </div>
       </div>
-
-      <form onSubmit={handleSearch} className="mt-1 mb-4 flex justify-center">
+      <form className="mt-1 mb-4 flex justify-center">
         <div className="relative w-full max-w-md">
           <input
             type="text"
             placeholder="Mau liburan kemana hari ini?"
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+              }
+            }}
             className="w-full h-12 text-center rounded-full border border-gray-300 px-10 py-3 shadow bg-white placeholder-gray-500"
           />
-          <button
-            type="submit"
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg"
-          >
-            <i className="fas fa-search"></i>
-          </button>
         </div>
       </form>
     </div>

@@ -71,7 +71,7 @@ Project ini dapat dideploy menggunakan Vercel berikut [Linknya](https://destinas
 
 - [Ogya Rajendra](https://github.com/Oradra19)
 - [Diah Ayu Susilowati](https://github.com/dhayyue)
-- [Yusuf Cahyo Utomo](https://github.com/username-teman)
+- [Yusuf Cahyo Utomo](https://github.com/Cahyoz29)
 
 
 ## Lisensi
